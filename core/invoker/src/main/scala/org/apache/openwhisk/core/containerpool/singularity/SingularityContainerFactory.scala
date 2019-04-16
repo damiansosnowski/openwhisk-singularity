@@ -63,23 +63,21 @@ class SingularityContainerFactory(instance: InvokerInstanceId,
     SingularityContainer.create(
       tid,
       image = if (userProvidedImage) Left(actionImage) else Right(actionImage.localImageName(config.runtimesRegistry)),
-      memory = memory,
-      cpuShares = cpuShares,
-      environment = Map("__OW_API_HOST" -> config.wskApiHost),
-      network = containerArgsConfig.network,
-      dnsServers = containerArgsConfig.dnsServers,
-      dnsSearch = containerArgsConfig.dnsSearch,
-      dnsOptions = containerArgsConfig.dnsOptions,
+//      memory = memory,
+//      cpuShares = cpuShares,
+//      environment = Map("__OW_API_HOST" -> config.wskApiHost),
+//      network = containerArgsConfig.network,
+//      dnsServers = containerArgsConfig.dnsServers,
+//      dnsSearch = containerArgsConfig.dnsSearch,
+//      dnsOptions = containerArgsConfig.dnsOptions,
       name = Some(name),
       parameters ++ containerArgsConfig.extraArgs.map { case (k, v) => ("--" + k, v) })
   }
 
-  //TODO At the moment this is not needed for the happy path.
   /** Perform cleanup on init */
   override def init(): Unit = { return }
   removeAllActionContainers()
 
-  //TODO At the moment this is not needed for the happy path.
   /** Perform cleanup on exit - to be registered as shutdown hook */
   override def cleanup(): Unit = {
     implicit val transid = TransactionId.invoker

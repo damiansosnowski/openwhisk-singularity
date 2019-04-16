@@ -59,13 +59,13 @@ object SingularityContainer {
    */
   def create(transid: TransactionId,
              image: Either[ImageName, String],
-             memory: ByteSize = 256.MB,
-             cpuShares: Int = 0,
-             environment: Map[String, String] = Map.empty,
-             network: String = "bridge",
-             dnsServers: Seq[String] = Seq.empty,
-             dnsSearch: Seq[String] = Seq.empty,
-             dnsOptions: Seq[String] = Seq.empty,
+//             memory: ByteSize = 256.MB,
+//             cpuShares: Int = 0,
+//             environment: Map[String, String] = Map.empty,
+//             network: String = "bridge",
+//             dnsServers: Seq[String] = Seq.empty,
+//             dnsSearch: Seq[String] = Seq.empty,
+//             dnsOptions: Seq[String] = Seq.empty,
              name: Option[String] = None,
              singularityRunParameters: Map[String, Set[String]])(implicit singularity: SingularityApiWithFileAccess,
                                                             as: ActorSystem,
@@ -73,31 +73,32 @@ object SingularityContainer {
                                                             log: Logging): Future[SingularityContainer] = {
     implicit val tid: TransactionId = transid
 
-    val environmentArgs = environment.flatMap {
-      case (key, value) => Seq("-e", s"$key=$value")
-    }
+//    val environmentArgs = environment.flatMap {
+//      case (key, value) => Seq("-e", s"$key=$value")
+//    }
 
-    val params = singularityRunParameters.flatMap {
-      case (key, valueList) => valueList.toList.flatMap(Seq(key, _))
-    }
+//    val params = singularityRunParameters.flatMap {
+//      case (key, valueList) => valueList.toList.flatMap(Seq(key, _))
+//    }
 
     // NOTE: --dns-option on modern versions of singularity, but is --dns-opt on singularity 1.12
     val dnsOptString = if (singularity.clientVersion.startsWith("1.12")) { "--dns-opt" } else { "--dns-option" }
-    val args = Seq(
-      "--cpu-shares",
-      cpuShares.toString,
-      "--memory",
-      s"${memory.toMB}m",
-      "--memory-swap",
-      s"${memory.toMB}m",
-      "--network",
-      network) ++
-      environmentArgs ++
-      dnsServers.flatMap(d => Seq("--dns", d)) ++
-      dnsSearch.flatMap(d => Seq("--dns-search", d)) ++
-      dnsOptions.flatMap(d => Seq(dnsOptString, d)) ++
-      name.map(n => Seq("--name", n)).getOrElse(Seq.empty) ++
-      params
+    val args = Seq.empty
+//    val args = Seq(
+//      "--cpu-shares",
+//      cpuShares.toString,
+//      "--memory",
+//      s"${memory.toMB}m",
+//      "--memory-swap",
+//      s"${memory.toMB}m",
+//      "--network",
+//      network) ++
+//      environmentArgs ++
+//      dnsServers.flatMap(d => Seq("--dns", d)) ++
+//      dnsSearch.flatMap(d => Seq("--dns-search", d)) ++
+//      dnsOptions.flatMap(d => Seq(dnsOptString, d)) ++
+//      name.map(n => Seq("--name", n)).getOrElse(Seq.empty) ++
+//      params
 
     val imageToUse = image.fold(_.publicImageName, identity)
 
@@ -137,7 +138,7 @@ object SingularityContainer {
             Future.failed(BlackboxStartupError(Messages.imagePullError(imageToUse)))
           }
       }
-      ip <- singularity.inspectIPAddress(id, network).recoverWith {
+      ip <- singularity.inspectIPAddress(id).recoverWith {
         // remove the container immediately if inspect failed as
         // we cannot recover that case automatically
         case _ =>
@@ -172,9 +173,12 @@ class SingularityContainer(protected val id: ContainerId,
   protected val waitForOomState: FiniteDuration = 2.seconds
   protected val filePollInterval: FiniteDuration = 5.milliseconds
 
+  // Singularity has no pause so the function underneath returns successfully
   override def suspend()(implicit transid: TransactionId): Future[Unit] = {
     super.suspend().flatMap(_ => singularity.pause(id))
   }
+
+  // Singularity has no pause so the function underneath returns successfully
   override def resume()(implicit transid: TransactionId): Future[Unit] = {
     (singularity.unpause(id)).flatMap(_ => super.resume())
   }
@@ -195,11 +199,12 @@ class SingularityContainer(protected val id: ContainerId,
    */
   private def isOomKilled(retries: Int = (waitForOomState / filePollInterval).toInt)(
     implicit transid: TransactionId): Future[Boolean] = {
-    singularity.isOomKilled(id)(TransactionId.invoker).flatMap { killed =>
-      if (killed) Future.successful(true)
-      else if (retries > 0) akka.pattern.after(filePollInterval, as.scheduler)(isOomKilled(retries - 1))
-      else Future.successful(false)
-    }
+    Future.successful(true)
+//    singularity.isOomKilled(id)(TransactionId.invoker).flatMap { killed =>
+//      if (killed) Future.successful(true)
+//      else if (retries > 0) akka.pattern.after(filePollInterval, as.scheduler)(isOomKilled(retries - 1))
+//      else Future.successful(false)
+//    }
   }
 
   override protected def callContainer(path: String,

@@ -95,15 +95,14 @@ class SingularityClient(singularityHost: Option[String] = None,
       throw new FileNotFoundException(s"Couldn't locate singularity binary (tried: ${alternatives.mkString(", ")}).")
     }
 
-    val host = singularityHost.map(host => Seq("--host", s"tcp://$host")).getOrElse(Seq.empty[String])
-    Seq(singularityBin) ++ host
+    Seq(singularityBin)
   }
 
   // Invoke singularity CLI to determine client version.
   // If the singularity client version cannot be determined, an exception will be thrown and instance initialization will fail.
   // Rationale: if we cannot invoke `singularity version` successfully, it is unlikely subsequent `singularity` invocations will succeed.
   protected def getClientVersion(): String = {
-    val vf = executeProcess(singularityCmd ++ Seq("version", "--format", "{{.Client.Version}}"), config.timeouts.version)
+    val vf = executeProcess(singularityCmd ++ Seq("--version"), config.timeouts.version)
       .andThen {
         case Success(version) => log.info(this, s"Detected singularity client version $version")
         case Failure(e) =>
@@ -118,11 +117,12 @@ class SingularityClient(singularityHost: Option[String] = None,
     new Semaphore( /* permits= */ if (maxParallelRuns > 0) maxParallelRuns else Int.MaxValue, /* fair= */ true)
 
   //// INVALID, that comment was for Docker
-  // Singularity < 1.13.1 has a known problem: if more than 10 containers are created (singularity run)
+  // Docker < 1.13.1 has a known problem: if more than 10 containers are created (singularity run)
   // concurrently, there is a good chance that some of them will fail.
   // See https://github.com/moby/moby/issues/29369
-  // Use a semaphore to make sure that at most 10 `singularity run` commands are active
+  // Use a semaphore to make sure that at most 10 `docker run` commands are active
   // the same time.
+
   def run(image: String, args: Seq[String] = Seq.empty[String])(
     implicit transid: TransactionId): Future[ContainerId] = {
     Future {
@@ -133,51 +133,56 @@ class SingularityClient(singularityHost: Option[String] = None,
       }
     }.flatMap { _ =>
       // Iff the semaphore was acquired successfully
-      runCmd(Seq("run", "-d") ++ args ++ Seq(image), config.timeouts.run)
+      val r = scala.util.Random
+      val containerID = "Random" ++ (r.nextInt(100000)).toString()
+
+      // ++ args were removed temporarily
+
+      runCmd(Seq("instance", "start") ++ Seq((image ++ ".simg"), containerID.toString), config.timeouts.run)
         .andThen {
           // Release the semaphore as quick as possible regardless of the runCmd() result
-          case _ => runSemaphore.release()
+          case _ =>
+            runSemaphore.release()
+            Future.successful(ContainerId(containerID))
         }
         .map(ContainerId.apply)
-        .recoverWith {
-          // https://docs.docker.com/v1.12/engine/reference/run/#/exit-status
-          // Exit status 125 means an error reported by the Docker daemon.
-          // Examples:
-          // - Unrecognized option specified
-          // - Not enough disk space
-          case pre: ProcessUnsuccessfulException if pre.exitStatus == ExitStatus(125) =>
-            Future.failed(
-              SingularityContainerId
-                .parse(pre.stdout)
-                .map(BrokenSingularityContainer(_, s"Broken container: ${pre.getMessage}"))
-                .getOrElse(pre))
-        }
+//        .recoverWith {
+//          case pre: ProcessUnsuccessfulException if pre.exitStatus == ExitStatus(255) =>
+//            Future.failed(
+//              SingularityContainerId
+//                .parse(pre.stdout)
+//                .map(BrokenSingularityContainer(_, s"Broken container: ${pre.getMessage}"))
+//                .getOrElse(pre))
+//        }
     }
   }
 
-  def inspectIPAddress(id: ContainerId, network: String)(implicit transid: TransactionId): Future[ContainerAddress] =
-    runCmd(
-      Seq("inspect", "--format", s"{{.NetworkSettings.Networks.${network}.IPAddress}}", id.asString),
-      config.timeouts.inspect).flatMap {
-      case "<no value>" => Future.failed(new NoSuchElementException)
-      case stdout       => Future.successful(ContainerAddress(stdout))
-    }
+  def inspectIPAddress(id: ContainerId)(implicit transid: TransactionId): Future[ContainerAddress] =
+    Future.successful(ContainerAddress("localhost"))
+//    runCmd(
+//      Seq("inspect", "--format", s"{{.NetworkSettings.Networks.${network}.IPAddress}}", id.asString),
+//      config.timeouts.inspect).flatMap {
+//      case "<no value>" => Future.failed(new NoSuchElementException)
+//      case stdout       => Future.successful(ContainerAddress(stdout))
+//    }
 
   def pause(id: ContainerId)(implicit transid: TransactionId): Future[Unit] =
-    runCmd(Seq("pause", id.asString), config.timeouts.pause).map(_ => ())
+    Future.successful()
+  //  runCmd(Seq("pause", id.asString), config.timeouts.pause).map(_ => ())
 
   def unpause(id: ContainerId)(implicit transid: TransactionId): Future[Unit] =
-    runCmd(Seq("unpause", id.asString), config.timeouts.unpause).map(_ => ())
+    Future.successful()
+  //  runCmd(Seq("unpause", id.asString), config.timeouts.unpause).map(_ => ())
 
   def rm(id: ContainerId)(implicit transid: TransactionId): Future[Unit] =
-    runCmd(Seq("rm", "-f", id.asString), config.timeouts.rm).map(_ => ())
+    runCmd(Seq("instance", "stop", id.asString), config.timeouts.rm).map(_ => ())
 
   def ps(filters: Seq[(String, String)] = Seq.empty, all: Boolean = false)(
     implicit transid: TransactionId): Future[Seq[ContainerId]] = {
-    val filterArgs = filters.flatMap { case (attr, value) => Seq("--filter", s"$attr=$value") }
-    val allArg = if (all) Seq("--all") else Seq.empty[String]
-    val cmd = Seq("ps", "--quiet", "--no-trunc") ++ allArg ++ filterArgs
-    runCmd(cmd, config.timeouts.ps).map(_.lines.toSeq.map(ContainerId.apply))
+//    val filterArgs = filters.flatMap { case (attr, value) => Seq("--filter", s"$attr=$value") }
+//    val allArg = if (all) Seq("--all") else Seq.empty[String]
+    val cmd = Seq("instance", "list") // ++ allArg ++ filterArgs
+    runCmd(cmd, config.timeouts.ps).map(_.lines.toSeq.map.(ContainerId.apply))
   }
 
   /**
@@ -188,11 +193,14 @@ class SingularityClient(singularityHost: Option[String] = None,
   private val pullsInFlight = TrieMap[String, Future[Unit]]()
   def pull(image: String)(implicit transid: TransactionId): Future[Unit] =
     pullsInFlight.getOrElseUpdate(image, {
-      runCmd(Seq("pull", image), config.timeouts.pull).map(_ => ()).andThen { case _ => pullsInFlight.remove(image) }
+      val imageName = image.split("/").toList.last
+      runCmd(Seq("pull", "--name", imageName ++ ".simg", "shub://" ++ image), config.timeouts.pull).map(
+        _ => ()).andThen { case _ => pullsInFlight.remove(image) }
     })
 
   def isOomKilled(id: ContainerId)(implicit transid: TransactionId): Future[Boolean] =
-    runCmd(Seq("inspect", id.asString, "--format", "{{.State.OOMKilled}}"), config.timeouts.inspect).map(_.toBoolean)
+    Future.successful(true)
+//    runCmd(Seq("inspect", id.asString, "--format", "{{.State.OOMKilled}}"), config.timeouts.inspect).map(_.toBoolean)
 
   protected def runCmd(args: Seq[String], timeout: Duration)(implicit transid: TransactionId): Future[String] = {
     val cmd = singularityCmd ++ args
@@ -240,7 +248,7 @@ trait SingularityApi {
    * @param network name of the network to get the IP address from
    * @return ip of the container
    */
-  def inspectIPAddress(id: ContainerId, network: String)(implicit transid: TransactionId): Future[ContainerAddress]
+  def inspectIPAddress(id: ContainerId)(implicit transid: TransactionId): Future[ContainerAddress]
 
   /**
    * Pauses the container with the given id.
