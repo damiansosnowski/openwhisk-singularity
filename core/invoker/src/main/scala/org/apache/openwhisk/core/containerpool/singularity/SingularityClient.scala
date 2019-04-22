@@ -167,11 +167,11 @@ class SingularityClient(singularityHost: Option[String] = None,
 //    }
 
   def pause(id: ContainerId)(implicit transid: TransactionId): Future[Unit] =
-    Future.successful()
+    Future.successful(())
   //  runCmd(Seq("pause", id.asString), config.timeouts.pause).map(_ => ())
 
   def unpause(id: ContainerId)(implicit transid: TransactionId): Future[Unit] =
-    Future.successful()
+    Future.successful(())
   //  runCmd(Seq("unpause", id.asString), config.timeouts.unpause).map(_ => ())
 
   def rm(id: ContainerId)(implicit transid: TransactionId): Future[Unit] =
@@ -182,7 +182,7 @@ class SingularityClient(singularityHost: Option[String] = None,
 //    val filterArgs = filters.flatMap { case (attr, value) => Seq("--filter", s"$attr=$value") }
 //    val allArg = if (all) Seq("--all") else Seq.empty[String]
     val cmd = Seq("instance", "list") // ++ allArg ++ filterArgs
-    runCmd(cmd, config.timeouts.ps).map(_.lines.toSeq.map.(ContainerId.apply))
+    runCmd(cmd, config.timeouts.ps).map(_.lines.toSeq.map(ContainerId.apply))
   }
 
   /**

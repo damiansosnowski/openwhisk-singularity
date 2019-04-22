@@ -31,7 +31,7 @@ import org.apache.openwhisk.common.TransactionId
 import org.apache.openwhisk.core.containerpool._
 import org.apache.openwhisk.core.entity.ActivationResponse.{ConnectionError, MemoryExhausted}
 import org.apache.openwhisk.core.entity.{ActivationEntityLimit, ByteSize}
-import org.apache.openwhisk.core.entity.size._
+// import org.apache.openwhisk.core.entity.size._
 import akka.stream.scaladsl.{Framing, Source}
 import akka.stream.stage._
 import akka.util.ByteString
@@ -160,7 +160,8 @@ object SingularityContainer {
  * @param addr the ip of the container
  */
 class SingularityContainer(protected val id: ContainerId,
-                      protected val addr: ContainerAddress,(implicit singularity: SingularityApiWithFileAccess,
+                           protected val addr: ContainerAddress)
+                                                            (implicit singularity: SingularityApiWithFileAccess,
                                                             override protected val as: ActorSystem,
                                                             protected val ec: ExecutionContext,
                                                             protected val logging: Logging)
