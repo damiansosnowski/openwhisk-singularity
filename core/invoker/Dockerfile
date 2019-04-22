@@ -10,6 +10,14 @@ ENV DOCKER_VERSION=1.12.0 \
 
 RUN apk add --update openssl
 
+RUN apk add gcc libc-dev squashfs-tools make python libarchive-dev tar linux-headers && \
+wget https://github.com/sylabs/singularity/releases/download/2.5.1/singularity-2.5.1.tar.gz && \
+tar xvf singularity-2.5.1.tar.gz && \
+cd singularity-2.5.1 && \
+./configure --prefix=/usr/local --sysconfdir=/etc && \
+make && \
+make install
+
 # Uncomment to fetch latest version of docker instead: RUN wget -qO- https://get.docker.com | sh
 # Install docker client
 RUN curl -sSL -o docker-${DOCKER_VERSION}.tgz https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz && \
