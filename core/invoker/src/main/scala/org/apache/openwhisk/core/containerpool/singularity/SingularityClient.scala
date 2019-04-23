@@ -138,7 +138,7 @@ class SingularityClient(singularityHost: Option[String] = None,
 
       // ++ args were removed temporarily
 
-      runCmd(Seq("instance", "start") ++ Seq((image ++ ".simg"), containerID.toString), config.timeouts.run)
+      runCmd(Seq("instance", "start") ++ Seq(("docker://" ++ image), containerID.toString), config.timeouts.run)
         .andThen {
           // Release the semaphore as quick as possible regardless of the runCmd() result
           case _ =>
@@ -193,8 +193,7 @@ class SingularityClient(singularityHost: Option[String] = None,
   private val pullsInFlight = TrieMap[String, Future[Unit]]()
   def pull(image: String)(implicit transid: TransactionId): Future[Unit] =
     pullsInFlight.getOrElseUpdate(image, {
-      val imageName = image.split("/").toList.last
-      runCmd(Seq("pull", "--name", imageName ++ ".simg", "shub://" ++ image), config.timeouts.pull).map(
+      runCmd(Seq("pull", "--name", "docker://" ++ image), config.timeouts.pull).map(
         _ => ()).andThen { case _ => pullsInFlight.remove(image) }
     })
 
