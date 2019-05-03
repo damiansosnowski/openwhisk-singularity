@@ -1,0 +1,99 @@
+Picked up JAVA_TOOL_OPTIONS: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
+[2019-05-03T17:57:20.948Z] [INFO] Loaded metric reporter [kamon.statsd.StatsDReporter]
+[2019-05-03T17:57:20.947Z] [INFO] Started the Kamon StatsD reporter
+[2019-05-03T17:57:21.201Z] [INFO] Slf4jLogger started
+[2019-05-03T17:57:21.590Z] [INFO] [#tid_sid_unknown] [Config] environment set value for runtimes.registry
+[2019-05-03T17:57:21.591Z] [INFO] [#tid_sid_unknown] [Config] environment set value for whisk.api.host.name
+[2019-05-03T17:57:21.592Z] [INFO] [#tid_sid_unknown] [Config] environment set value for whisk.api.host.proto
+[2019-05-03T17:57:21.592Z] [INFO] [#tid_sid_unknown] [Config] environment set value for whisk.api.host.port
+[2019-05-03T17:57:21.593Z] [INFO] [#tid_sid_unknown] [Config] environment set value for zookeeper.hosts
+[2019-05-03T17:57:21.593Z] [INFO] [#tid_sid_unknown] [Config] environment set value for runtimes.manifest
+[2019-05-03T17:57:21.594Z] [INFO] [#tid_sid_unknown] [Config] environment set value for kafka.hosts
+[2019-05-03T17:57:21.594Z] [INFO] [#tid_sid_unknown] [Config] environment set value for port
+[2019-05-03T17:57:21.804Z] [INFO] [#tid_sid_unknown] [Invoker] Command line arguments parsed to yield CmdLineArgs(Some(0),Some(0),None)
+[2019-05-03T17:57:21.805Z] [INFO] [#tid_sid_unknown] [Invoker] invokerReg: using proposedInvokerId 0
+[2019-05-03T17:57:21.808Z] [INFO] The configuration was reloaded successfully.
+[2019-05-03T17:57:22.119Z] [INFO] [#tid_sid_unknown] [KafkaMessagingProvider] topic invoker0 already existed
+[2019-05-03T17:57:22.308Z] [INFO] [#tid_sid_unknown] [InvokerReactive] LogStoreProvider: class org.apache.openwhisk.core.containerpool.logging.DockerToActivationLogStore
+[2019-05-03T17:57:22.473Z] [INFO] [#tid_sid_unknown] [DockerClientWithFileAccess] Detected docker client version 1.12.0
+[2019-05-03T17:57:22.514Z] [INFO] [#tid_sid_invoker] [DockerClientWithFileAccess] running /usr/bin/docker ps --quiet --no-trunc --all --filter name=wsk00_ (timeout: 1 minute) [marker:invoker_docker.ps_start:926]
+[2019-05-03T17:57:22.561Z] [INFO] [#tid_sid_invoker] [DockerClientWithFileAccess]  [marker:invoker_docker.ps_finish:972:11]
+[2019-05-03T17:57:22.574Z] [INFO] [#tid_sid_invoker] [DockerContainerFactory] removing 0 action containers.
+[2019-05-03T17:57:23.333Z] [INFO] [#tid_sid_invoker] [CouchDbRestStore] [QUERY] 'whisk_local_subjects' searching 'namespaceThrottlings/blockedNamespaces [marker:database_queryView_start:1746]
+[2019-05-03T17:57:23.694Z] [INFO] [#tid_sid_dispatcher] [MessageFeed] handler capacity = 4000, pipeline fill at = 4000, pipeline depth = 8000
+[2019-05-03T17:57:23.704Z] [INFO] [#tid_sid_invokerWarmup] [ContainerPool] pre-warming 2 nodejs:6 256 MB
+[2019-05-03T17:57:23.764Z] [INFO] [#tid_sid_invoker] [CouchDbRestStore]  [marker:database_queryView_finish:2163:417]
+[2019-05-03T17:57:23.765Z] [INFO] [#tid_sid_unknown] [InvokerReactive] updated blacklist to 0 entries
+[2019-05-03T17:57:23.962Z] [INFO] [#tid_sid_invokerWarmup] [DockerClientWithFileAccess] running /usr/bin/docker run -d --cpu-shares 128 --memory 256m --memory-swap 256m --network bridge -e __OW_API_HOST=https://172.17.0.1:443 --name wsk00_2_prewarm_nodejs6 --pids-limit 1024 --cap-drop NET_RAW --cap-drop NET_ADMIN --ulimit nofile=1024:1024 --log-driver json-file --env __OW_ALLOW_CONCURRENT=True openwhisk/nodejs6action:latest (timeout: 1 minute) [marker:invoker_docker.run_start:2374]
+[2019-05-03T17:57:23.970Z] [INFO] [#tid_sid_invokerWarmup] [DockerClientWithFileAccess] running /usr/bin/docker run -d --cpu-shares 128 --memory 256m --memory-swap 256m --network bridge -e __OW_API_HOST=https://172.17.0.1:443 --name wsk00_1_prewarm_nodejs6 --pids-limit 1024 --cap-drop NET_RAW --cap-drop NET_ADMIN --ulimit nofile=1024:1024 --log-driver json-file --env __OW_ALLOW_CONCURRENT=True openwhisk/nodejs6action:latest (timeout: 1 minute) [marker:invoker_docker.run_start:2382]
+[2019-05-03T17:57:24.199Z] [INFO] [#tid_sid_invokerHealth] [InvokerReactive]  [marker:invoker_activation_start:46392]
+[2019-05-03T17:57:24.239Z] [WARN] [#tid_sid_invokerHealth] [InvokerReactive] revision was not provided for whisk.system/invokerHealthTestAction0
+[2019-05-03T17:57:24.645Z] [INFO] [#tid_sid_invokerHealth] [CouchDbRestStore] [GET] 'whisk_local_whisks' finding document: 'id: whisk.system/invokerHealthTestAction0' [marker:database_getDocument_start:46838]
+[2019-05-03T17:57:24.698Z] [INFO] [#tid_sid_invokerHealth] [CouchDbRestStore]  [marker:database_getDocument_finish:46885:46]
+[2019-05-03T17:57:24.857Z] [INFO] [#tid_sid_invokerHealth] [DockerClientWithFileAccess] running /usr/bin/docker run -d --cpu-shares 64 --memory 128m --memory-swap 128m --network bridge -e __OW_API_HOST=https://172.17.0.1:443 --name wsk00_3_whisksystem_invokerHealthTestAction0 --pids-limit 1024 --cap-drop NET_RAW --cap-drop NET_ADMIN --ulimit nofile=1024:1024 --log-driver json-file --env __OW_ALLOW_CONCURRENT=True openwhisk/nodejs6action:latest (timeout: 1 minute) [marker:invoker_docker.run_start:47051]
+[2019-05-03T17:57:24.872Z] [INFO] [#tid_sid_invokerHealth] [ContainerPool] containerStart containerState: cold container: None activations: 1 of max 1 action: invokerHealthTestAction0 namespace: whisk.system activationId: df41633b8bae4ff581633b8bae4ff574 [marker:invoker_containerStart.cold_count:47062]
+[2019-05-03T17:57:24.916Z] [INFO] [#tid_sid_invokerWarmup] [DockerClientWithFileAccess]  [marker:invoker_docker.run_finish:3329:955]
+[2019-05-03T17:57:25.006Z] [INFO] [#tid_sid_invokerWarmup] [DockerClientWithFileAccess]  [marker:invoker_docker.run_finish:3419:1037]
+[2019-05-03T17:57:25.557Z] [INFO] [#tid_sid_invokerHealth] [DockerClientWithFileAccess]  [marker:invoker_docker.run_finish:47750:699]
+[2019-05-03T17:57:25.560Z] [INFO] [#tid_sid_invokerHealth] [DockerContainer] sending initialization to ContainerId(c17f9ac3918abb480ea2d9110c75de7fb1aca285fe56ea9877a0fa7fa68ed1aa) ContainerAddress(172.17.0.12,8080) [marker:invoker_activationInit_start:47753]
+[2019-05-03T17:57:26.050Z] [INFO] [#tid_sid_invokerHealth] [DockerContainer] initialization result: ok [marker:invoker_activationInit_finish:48242:479]
+[2019-05-03T17:57:26.057Z] [INFO] [#tid_sid_invokerHealth] [DockerContainer] sending arguments to /whisk.system/invokerHealthTestAction0 at ContainerId(c17f9ac3918abb480ea2d9110c75de7fb1aca285fe56ea9877a0fa7fa68ed1aa) ContainerAddress(172.17.0.12,8080) [marker:invoker_activationRun_start:48250]
+[2019-05-03T17:57:26.105Z] [INFO] [#tid_sid_invokerHealth] [DockerContainer] running result: ok [marker:invoker_activationRun_finish:48298:45]
+[2019-05-03T17:57:26.119Z] [INFO] [#tid_sid_invokerHealth] [ContainerProxy]  [marker:invoker_collectLogs_start:48306]
+[2019-05-03T17:57:26.180Z] [INFO] [#tid_sid_invokerHealth] [ContainerProxy]  [marker:invoker_collectLogs_finish:48374:60]
+[2019-05-03T17:57:26.190Z] [INFO] [#tid_sid_invokerHealth] [CouchDbRestStore] [PUT] 'whisk_local_activations' saving document: 'id: whisk.system/df41633b8bae4ff581633b8bae4ff574, rev: null' [marker:database_saveDocument_start:48379]
+[2019-05-03T17:57:26.193Z] [INFO] [#tid_sid_dbBatcher] [CouchDbRestStore] 'whisk_local_activations' saving 1 documents [marker:database_saveDocumentBulk_start:4606]
+[2019-05-03T17:57:26.219Z] [INFO] [#tid_sid_dbBatcher] [CouchDbRestStore]  [marker:database_saveDocumentBulk_finish:4631:25]
+[2019-05-03T17:57:26.244Z] [INFO] [#tid_sid_invokerHealth] [CouchDbRestStore]  [marker:database_saveDocument_finish:48438:53]
+[2019-05-03T17:57:26.293Z] [INFO] [#tid_sid_invokerNanny] [RuncClient] running /usr/bin/docker-runc pause c17f9ac3918abb480ea2d9110c75de7fb1aca285fe56ea9877a0fa7fa68ed1aa (timeout: 10 seconds) [marker:invoker_runc.pause_start:4705]
+[2019-05-03T17:57:26.307Z] [INFO] [#tid_sid_invokerHealth] [InvokerReactive] posted completion of activation df41633b8bae4ff581633b8bae4ff574
+[2019-05-03T17:57:26.342Z] [ERROR] [#tid_sid_invokerNanny] [RuncClient] info: command was unsuccessful, code: 1 (unsuccessful), stdout: , stderr: open /run/runc/c17f9ac3918abb480ea2d9110c75de7fb1aca285fe56ea9877a0fa7fa68ed1aa/state.json: no such file or directory [marker:invoker_runc.pause_error:4753:47]
+[2019-05-03T17:57:26.354Z] [INFO] [#tid_sid_invokerNanny] [DockerClientWithFileAccess] running /usr/bin/docker rm -f c17f9ac3918abb480ea2d9110c75de7fb1aca285fe56ea9877a0fa7fa68ed1aa (timeout: 1 minute) [marker:invoker_docker.rm_start:4767]
+[2019-05-03T17:57:26.380Z] [INFO] [#tid_sid_invokerHealth] [InvokerReactive]  [marker:invoker_activation_start:48573]
+[2019-05-03T17:57:26.380Z] [WARN] [#tid_sid_invokerHealth] [InvokerReactive] revision was not provided for whisk.system/invokerHealthTestAction0
+[2019-05-03T17:57:26.380Z] [INFO] [#tid_sid_invokerHealth] [CouchDbRestStore] [GET] 'whisk_local_whisks' finding document: 'id: whisk.system/invokerHealthTestAction0' [marker:database_getDocument_start:48574]
+[2019-05-03T17:57:26.428Z] [INFO] [#tid_sid_invokerHealth] [CouchDbRestStore]  [marker:database_getDocument_finish:48616:42]
+[2019-05-03T17:57:26.429Z] [INFO] [#tid_sid_invokerHealth] [ContainerPool] containerStart containerState: cold container: None activations: 1 of max 1 action: invokerHealthTestAction0 namespace: whisk.system activationId: 51824135813f4e80824135813f1e8080 [marker:invoker_containerStart.cold_count:48617]
+[2019-05-03T17:57:26.429Z] [INFO] [#tid_sid_invokerHealth] [DockerClientWithFileAccess] running /usr/bin/docker run -d --cpu-shares 64 --memory 128m --memory-swap 128m --network bridge -e __OW_API_HOST=https://172.17.0.1:443 --name wsk00_4_whisksystem_invokerHealthTestAction0 --pids-limit 1024 --cap-drop NET_RAW --cap-drop NET_ADMIN --ulimit nofile=1024:1024 --log-driver json-file --env __OW_ALLOW_CONCURRENT=True openwhisk/nodejs6action:latest (timeout: 1 minute) [marker:invoker_docker.run_start:48618]
+[2019-05-03T17:57:26.880Z] [INFO] [#tid_sid_invokerNanny] [DockerClientWithFileAccess]  [marker:invoker_docker.rm_finish:5292:525]
+[2019-05-03T17:57:27.165Z] [INFO] [#tid_sid_invokerHealth] [DockerClientWithFileAccess]  [marker:invoker_docker.run_finish:49359:741]
+[2019-05-03T17:57:27.175Z] [INFO] [#tid_sid_invokerHealth] [DockerContainer] sending initialization to ContainerId(f82852e3d64ae9316fbccb59862372d1bec7f6270845d208a0aa61df1a00d688) ContainerAddress(172.17.0.13,8080) [marker:invoker_activationInit_start:49368]
+[2019-05-03T17:57:27.356Z] [INFO] [#tid_sid_invokerHealth] [DockerContainer] initialization result: ok [marker:invoker_activationInit_finish:49549:181]
+[2019-05-03T17:57:27.356Z] [INFO] [#tid_sid_invokerHealth] [DockerContainer] sending arguments to /whisk.system/invokerHealthTestAction0 at ContainerId(f82852e3d64ae9316fbccb59862372d1bec7f6270845d208a0aa61df1a00d688) ContainerAddress(172.17.0.13,8080) [marker:invoker_activationRun_start:49549]
+[2019-05-03T17:57:27.370Z] [INFO] [#tid_sid_invokerHealth] [DockerContainer] running result: ok [marker:invoker_activationRun_finish:49562:13]
+[2019-05-03T17:57:27.371Z] [INFO] [#tid_sid_invokerHealth] [ContainerProxy]  [marker:invoker_collectLogs_start:49562]
+[2019-05-03T17:57:27.373Z] [INFO] [#tid_sid_invokerHealth] [ContainerProxy]  [marker:invoker_collectLogs_finish:49567:4]
+[2019-05-03T17:57:27.374Z] [INFO] [#tid_sid_invokerHealth] [CouchDbRestStore] [PUT] 'whisk_local_activations' saving document: 'id: whisk.system/51824135813f4e80824135813f1e8080, rev: null' [marker:database_saveDocument_start:49568]
+[2019-05-03T17:57:27.374Z] [INFO] [#tid_sid_dbBatcher] [CouchDbRestStore] 'whisk_local_activations' saving 1 documents [marker:database_saveDocumentBulk_start:5787]
+[2019-05-03T17:57:27.383Z] [INFO] [#tid_sid_invokerHealth] [InvokerReactive] posted completion of activation 51824135813f4e80824135813f1e8080
+[2019-05-03T17:57:27.407Z] [INFO] [#tid_sid_dbBatcher] [CouchDbRestStore]  [marker:database_saveDocumentBulk_finish:5820:33]
+[2019-05-03T17:57:27.407Z] [INFO] [#tid_sid_invokerHealth] [CouchDbRestStore]  [marker:database_saveDocument_finish:49601:33]
+[2019-05-03T17:57:27.447Z] [INFO] [#tid_sid_invokerNanny] [RuncClient] running /usr/bin/docker-runc pause f82852e3d64ae9316fbccb59862372d1bec7f6270845d208a0aa61df1a00d688 (timeout: 10 seconds) [marker:invoker_runc.pause_start:5859]
+[2019-05-03T17:57:27.454Z] [ERROR] [#tid_sid_invokerNanny] [RuncClient] info: command was unsuccessful, code: 1 (unsuccessful), stdout: , stderr: open /run/runc/f82852e3d64ae9316fbccb59862372d1bec7f6270845d208a0aa61df1a00d688/state.json: no such file or directory [marker:invoker_runc.pause_error:5865:6]
+[2019-05-03T17:57:27.454Z] [INFO] [#tid_sid_invokerNanny] [DockerClientWithFileAccess] running /usr/bin/docker rm -f f82852e3d64ae9316fbccb59862372d1bec7f6270845d208a0aa61df1a00d688 (timeout: 1 minute) [marker:invoker_docker.rm_start:5866]
+[2019-05-03T17:57:27.807Z] [INFO] [#tid_sid_invokerNanny] [DockerClientWithFileAccess]  [marker:invoker_docker.rm_finish:6220:354]
+[2019-05-03T17:57:32.242Z] [INFO] [#tid_c8068edaced35fbaa3608f0e472cefdb] [InvokerReactive]  [marker:invoker_activation_start:208]
+[2019-05-03T17:57:32.268Z] [INFO] [#tid_c8068edaced35fbaa3608f0e472cefdb] [WhiskAction] [GET] serving from datastore: CacheKey(whisk.system/utils/echo) [marker:database_cacheMiss_count:237]
+[2019-05-03T17:57:32.268Z] [INFO] [#tid_c8068edaced35fbaa3608f0e472cefdb] [CouchDbRestStore] [GET] 'whisk_local_whisks' finding document: 'id: whisk.system/utils/echo, rev: 1-2f387bc3ea19cdcd77c95c99ca99f4a0' [marker:database_getDocument_start:237]
+[2019-05-03T17:57:32.279Z] [INFO] [#tid_c8068edaced35fbaa3608f0e472cefdb] [CouchDbRestStore]  [marker:database_getDocument_finish:248:11]
+[2019-05-03T17:57:32.301Z] [INFO] [#tid_c8068edaced35fbaa3608f0e472cefdb] [WhiskAction] write initiated on existing cache entry, invalidating CacheKey(whisk.system/utils/echo), tid c8068edaced35fbaa3608f0e472cefdb, state WriteInProgress
+[2019-05-03T17:57:32.303Z] [INFO] [#tid_c8068edaced35fbaa3608f0e472cefdb] [WhiskAction] write all done, caching CacheKey(whisk.system/utils/echo) Cached
+[2019-05-03T17:57:32.303Z] [INFO] [#tid_c8068edaced35fbaa3608f0e472cefdb] [ContainerPool] containerStart containerState: prewarmed container: Some(ContainerId(209e84faf9449179f0d6e34815c2426a43790e1997e8e73a3b8490962a4798c5)) activations: 1 of max 1 action: echo namespace: guest activationId: 1d7c75a090c0407ebc75a090c0307efe [marker:invoker_containerStart.prewarmed_count:271]
+[2019-05-03T17:57:32.303Z] [INFO] [#tid_c8068edaced35fbaa3608f0e472cefdb] [DockerContainer] sending initialization to ContainerId(209e84faf9449179f0d6e34815c2426a43790e1997e8e73a3b8490962a4798c5) ContainerAddress(172.17.0.8,8080) [marker:invoker_activationInit_start:272]
+[2019-05-03T17:57:32.310Z] [INFO] [#tid_sid_invokerWarmup] [DockerClientWithFileAccess] running /usr/bin/docker run -d --cpu-shares 128 --memory 256m --memory-swap 256m --network bridge -e __OW_API_HOST=https://172.17.0.1:443 --name wsk00_5_prewarm_nodejs6 --pids-limit 1024 --cap-drop NET_RAW --cap-drop NET_ADMIN --ulimit nofile=1024:1024 --log-driver json-file --env __OW_ALLOW_CONCURRENT=True openwhisk/nodejs6action:latest (timeout: 1 minute) [marker:invoker_docker.run_start:10722]
+[2019-05-03T17:57:32.369Z] [INFO] [#tid_c8068edaced35fbaa3608f0e472cefdb] [DockerContainer] initialization result: ok [marker:invoker_activationInit_finish:337:62]
+[2019-05-03T17:57:32.369Z] [INFO] [#tid_c8068edaced35fbaa3608f0e472cefdb] [DockerContainer] sending arguments to /whisk.system/utils/echo at ContainerId(209e84faf9449179f0d6e34815c2426a43790e1997e8e73a3b8490962a4798c5) ContainerAddress(172.17.0.8,8080) [marker:invoker_activationRun_start:337]
+[2019-05-03T17:57:32.402Z] [INFO] [#tid_c8068edaced35fbaa3608f0e472cefdb] [DockerContainer] running result: ok [marker:invoker_activationRun_finish:362:25]
+[2019-05-03T17:57:32.402Z] [INFO] [#tid_c8068edaced35fbaa3608f0e472cefdb] [ContainerProxy]  [marker:invoker_collectLogs_start:363]
+[2019-05-03T17:57:32.413Z] [INFO] [#tid_c8068edaced35fbaa3608f0e472cefdb] [ContainerProxy]  [marker:invoker_collectLogs_finish:382:19]
+[2019-05-03T17:57:32.414Z] [INFO] [#tid_c8068edaced35fbaa3608f0e472cefdb] [CouchDbRestStore] [PUT] 'whisk_local_activations' saving document: 'id: guest/1d7c75a090c0407ebc75a090c0307efe, rev: null' [marker:database_saveDocument_start:383]
+[2019-05-03T17:57:32.417Z] [INFO] [#tid_sid_dbBatcher] [CouchDbRestStore] 'whisk_local_activations' saving 1 documents [marker:database_saveDocumentBulk_start:10829]
+[2019-05-03T17:57:32.459Z] [INFO] [#tid_c8068edaced35fbaa3608f0e472cefdb] [InvokerReactive] posted completion of activation 1d7c75a090c0407ebc75a090c0307efe
+[2019-05-03T17:57:32.475Z] [INFO] [#tid_c8068edaced35fbaa3608f0e472cefdb] [InvokerReactive] posted completion of activation 1d7c75a090c0407ebc75a090c0307efe
+[2019-05-03T17:57:32.517Z] [INFO] [#tid_sid_dbBatcher] [CouchDbRestStore]  [marker:database_saveDocumentBulk_finish:10925:96]
+[2019-05-03T17:57:32.517Z] [INFO] [#tid_c8068edaced35fbaa3608f0e472cefdb] [CouchDbRestStore]  [marker:database_saveDocument_finish:482:99]
+[2019-05-03T17:57:32.529Z] [INFO] [#tid_sid_invokerNanny] [RuncClient] running /usr/bin/docker-runc pause 209e84faf9449179f0d6e34815c2426a43790e1997e8e73a3b8490962a4798c5 (timeout: 10 seconds) [marker:invoker_runc.pause_start:10941]
+[2019-05-03T17:57:32.585Z] [ERROR] [#tid_sid_invokerNanny] [RuncClient] info: command was unsuccessful, code: 1 (unsuccessful), stdout: , stderr: open /run/runc/209e84faf9449179f0d6e34815c2426a43790e1997e8e73a3b8490962a4798c5/state.json: no such file or directory [marker:invoker_runc.pause_error:10996:55]
+[2019-05-03T17:57:32.585Z] [INFO] [#tid_sid_invokerNanny] [DockerClientWithFileAccess] running /usr/bin/docker rm -f 209e84faf9449179f0d6e34815c2426a43790e1997e8e73a3b8490962a4798c5 (timeout: 1 minute) [marker:invoker_docker.rm_start:10997]
+[2019-05-03T17:57:32.995Z] [INFO] [#tid_sid_invokerNanny] [DockerClientWithFileAccess]  [marker:invoker_docker.rm_finish:11408:411]
+[2019-05-03T17:57:33.011Z] [INFO] [#tid_sid_invokerWarmup] [DockerClientWithFileAccess]  [marker:invoker_docker.run_finish:11423:701]

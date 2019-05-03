@@ -1,0 +1,63 @@
+Picked up JAVA_TOOL_OPTIONS: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
+[2019-05-03T18:31:27.465Z] [INFO] Started the Kamon StatsD reporter
+[2019-05-03T18:31:27.466Z] [INFO] Loaded metric reporter [kamon.statsd.StatsDReporter]
+[2019-05-03T18:31:27.747Z] [INFO] Slf4jLogger started
+[2019-05-03T18:31:28.169Z] [INFO] [#tid_sid_unknown] [Config] environment set value for runtimes.registry
+[2019-05-03T18:31:28.169Z] [INFO] [#tid_sid_unknown] [Config] environment set value for whisk.api.host.name
+[2019-05-03T18:31:28.169Z] [INFO] [#tid_sid_unknown] [Config] environment set value for whisk.api.host.proto
+[2019-05-03T18:31:28.170Z] [INFO] [#tid_sid_unknown] [Config] environment set value for whisk.api.host.port
+[2019-05-03T18:31:28.170Z] [INFO] [#tid_sid_unknown] [Config] environment set value for zookeeper.hosts
+[2019-05-03T18:31:28.170Z] [INFO] [#tid_sid_unknown] [Config] environment set value for runtimes.manifest
+[2019-05-03T18:31:28.171Z] [INFO] [#tid_sid_unknown] [Config] environment set value for kafka.hosts
+[2019-05-03T18:31:28.171Z] [INFO] [#tid_sid_unknown] [Config] environment set value for port
+[2019-05-03T18:31:28.413Z] [INFO] [#tid_sid_unknown] [Invoker] Command line arguments parsed to yield CmdLineArgs(Some(0),Some(0),None)
+[2019-05-03T18:31:28.414Z] [INFO] [#tid_sid_unknown] [Invoker] invokerReg: using proposedInvokerId 0
+[2019-05-03T18:31:28.420Z] [INFO] The configuration was reloaded successfully.
+[2019-05-03T18:31:28.813Z] [INFO] [#tid_sid_unknown] [KafkaMessagingProvider] created topic invoker0
+[2019-05-03T18:31:29.111Z] [INFO] [#tid_sid_unknown] [InvokerReactive] LogStoreProvider: class org.apache.openwhisk.core.containerpool.logging.DockerToActivationLogStore
+[2019-05-03T18:31:29.328Z] [INFO] [#tid_sid_unknown] [SingularityClientWithFileAccess] Detected singularity client version 2.5.1-dist
+[2019-05-03T18:31:29.332Z] [INFO] [#tid_sid_invoker] [SingularityClientWithFileAccess] running /usr/local/bin/singularity instance list (timeout: 1 minute) [marker:invoker_singularity.instance_start:1165]
+[2019-05-03T18:31:29.460Z] [ERROR] [#tid_sid_invoker] [SingularityClientWithFileAccess] info: command was unsuccessful, code: 1 (unsuccessful), stdout: DAEMON NAME      PID      CONTAINER IMAGE, stderr:  [marker:invoker_singularity.instance_error:1291:72]
+[2019-05-03T18:31:30.337Z] [INFO] [#tid_sid_invoker] [CouchDbRestStore] [QUERY] 'whisk_local_subjects' searching 'namespaceThrottlings/blockedNamespaces [marker:database_queryView_start:2171]
+[2019-05-03T18:31:30.789Z] [INFO] [#tid_sid_dispatcher] [MessageFeed] handler capacity = 4000, pipeline fill at = 4000, pipeline depth = 8000
+[2019-05-03T18:31:30.815Z] [INFO] [#tid_sid_invoker] [CouchDbRestStore]  [marker:database_queryView_finish:2648:468]
+[2019-05-03T18:31:30.818Z] [INFO] [#tid_sid_invokerWarmup] [ContainerPool] pre-warming 2 nodejs:6 256 MB
+[2019-05-03T18:31:30.818Z] [INFO] [#tid_sid_unknown] [InvokerReactive] updated blacklist to 0 entries
+[2019-05-03T18:31:31.295Z] [INFO] [#tid_sid_invokerWarmup] [SingularityClientWithFileAccess] running /usr/local/bin/singularity instance start docker://openwhisk/nodejs6action:latest Random41579 (timeout: 1 minute) [marker:invoker_singularity.instance_start:3128]
+[2019-05-03T18:31:31.296Z] [INFO] [#tid_sid_invokerWarmup] [SingularityClientWithFileAccess] running /usr/local/bin/singularity run --pwd /nodejsAction instance://Random41579 (timeout: 1 minute) [marker:invoker_singularity.run_start:3129]
+[2019-05-03T18:31:31.299Z] [INFO] [#tid_sid_invokerWarmup] [SingularityClientWithFileAccess] running /usr/local/bin/singularity instance start docker://openwhisk/nodejs6action:latest Random19586 (timeout: 1 minute) [marker:invoker_singularity.instance_start:3131]
+[2019-05-03T18:31:31.300Z] [INFO] [#tid_sid_invokerWarmup] [SingularityClientWithFileAccess] running /usr/local/bin/singularity run --pwd /nodejsAction instance://Random19586 (timeout: 1 minute) [marker:invoker_singularity.run_start:3131]
+[2019-05-03T18:31:31.412Z] [INFO] [#tid_sid_invokerHealth] [InvokerReactive]  [marker:invoker_activation_start:25953]
+[2019-05-03T18:31:31.450Z] [WARN] [#tid_sid_invokerHealth] [InvokerReactive] revision was not provided for whisk.system/invokerHealthTestAction0
+[2019-05-03T18:31:31.471Z] [ERROR] [#tid_sid_invokerWarmup] [SingularityClientWithFileAccess] info: command was unsuccessful, code: 255 (terminated by signal 127), stdout: , stderr: ERROR: A daemon process is not running with this name: Random41579
+ABORT: Aborting with RETVAL=255 [marker:invoker_singularity.run_error:3305:176]
+[2019-05-03T18:31:31.485Z] [ERROR] [#tid_sid_invokerWarmup] [SingularityClientWithFileAccess] info: command was unsuccessful, code: 255 (terminated by signal 127), stdout: , stderr: ERROR: A daemon process is not running with this name: Random19586
+ABORT: Aborting with RETVAL=255 [marker:invoker_singularity.run_error:3316:184]
+[2019-05-03T18:31:31.947Z] [INFO] [#tid_sid_invokerHealth] [CouchDbRestStore] [GET] 'whisk_local_whisks' finding document: 'id: whisk.system/invokerHealthTestAction0' [marker:database_getDocument_start:26490]
+[2019-05-03T18:31:31.974Z] [INFO] [#tid_sid_invokerHealth] [CouchDbRestStore]  [marker:database_getDocument_finish:26515:25]
+[2019-05-03T18:31:32.116Z] [INFO] [#tid_sid_invokerHealth] [SingularityClientWithFileAccess] running /usr/local/bin/singularity instance start docker://openwhisk/nodejs6action:latest Random6347 (timeout: 1 minute) [marker:invoker_singularity.instance_start:26659]
+[2019-05-03T18:31:32.116Z] [INFO] [#tid_sid_invokerHealth] [SingularityClientWithFileAccess] running /usr/local/bin/singularity run --pwd /nodejsAction instance://Random6347 (timeout: 1 minute) [marker:invoker_singularity.run_start:26660]
+[2019-05-03T18:31:32.124Z] [INFO] [#tid_sid_invokerHealth] [ContainerPool] containerStart containerState: cold container: None activations: 1 of max 1 action: invokerHealthTestAction0 namespace: whisk.system activationId: e17f5959f12a4666bf5959f12a46667c [marker:invoker_containerStart.cold_count:26666]
+[2019-05-03T18:31:32.323Z] [ERROR] [#tid_sid_invokerHealth] [SingularityClientWithFileAccess] info: command was unsuccessful, code: 255 (terminated by signal 127), stdout: , stderr: ERROR: A daemon process is not running with this name: Random6347
+ABORT: Aborting with RETVAL=255 [marker:invoker_singularity.run_error:26866:206]
+[2019-05-03T18:31:32.560Z] [INFO] [#tid_sid_invokerHealth] [CouchDbRestStore] [PUT] 'whisk_local_activations' saving document: 'id: whisk.system/e17f5959f12a4666bf5959f12a46667c, rev: null' [marker:database_saveDocument_start:27103]
+[2019-05-03T18:31:32.565Z] [INFO] [#tid_sid_dbBatcher] [CouchDbRestStore] 'whisk_local_activations' saving 1 documents [marker:database_saveDocumentBulk_start:4396]
+[2019-05-03T18:31:32.614Z] [INFO] [#tid_sid_invokerHealth] [InvokerReactive] posted completion of activation e17f5959f12a4666bf5959f12a46667c
+[2019-05-03T18:31:32.770Z] [INFO] [#tid_sid_dbBatcher] [CouchDbRestStore]  [marker:database_saveDocumentBulk_finish:4603:207]
+[2019-05-03T18:31:32.790Z] [INFO] [#tid_sid_invokerHealth] [CouchDbRestStore]  [marker:database_saveDocument_finish:27334:230]
+[2019-05-03T18:32:55.300Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [InvokerReactive]  [marker:invoker_activation_start:334]
+[2019-05-03T18:32:55.340Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [WhiskAction] [GET] serving from datastore: CacheKey(whisk.system/utils/echo) [marker:database_cacheMiss_count:374]
+[2019-05-03T18:32:55.340Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [CouchDbRestStore] [GET] 'whisk_local_whisks' finding document: 'id: whisk.system/utils/echo, rev: 1-2f387bc3ea19cdcd77c95c99ca99f4a0' [marker:database_getDocument_start:375]
+[2019-05-03T18:32:55.381Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [CouchDbRestStore]  [marker:database_getDocument_finish:414:39]
+[2019-05-03T18:32:55.411Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [WhiskAction] write initiated on existing cache entry, invalidating CacheKey(whisk.system/utils/echo), tid 924215426b9c3af43c0ef5d346eb09e3, state WriteInProgress
+[2019-05-03T18:32:55.412Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [ContainerPool] containerStart containerState: cold container: None activations: 1 of max 1 action: echo namespace: guest activationId: 8f0bfab190cf4acd8bfab190cf0acd50 [marker:invoker_containerStart.cold_count:447]
+[2019-05-03T18:32:55.413Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [WhiskAction] write all done, caching CacheKey(whisk.system/utils/echo) Cached
+[2019-05-03T18:32:55.416Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [SingularityClientWithFileAccess] running /usr/local/bin/singularity instance start docker://openwhisk/nodejs6action:latest Random19232 (timeout: 1 minute) [marker:invoker_singularity.instance_start:450]
+[2019-05-03T18:32:55.416Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [SingularityClientWithFileAccess] running /usr/local/bin/singularity run --pwd /nodejsAction instance://Random19232 (timeout: 1 minute) [marker:invoker_singularity.run_start:451]
+[2019-05-03T18:32:55.485Z] [ERROR] [#tid_924215426b9c3af43c0ef5d346eb09e3] [SingularityClientWithFileAccess] info: command was unsuccessful, code: 255 (terminated by signal 127), stdout: , stderr: ERROR: A daemon process is not running with this name: Random19232
+ABORT: Aborting with RETVAL=255 [marker:invoker_singularity.run_error:519:68]
+[2019-05-03T18:32:55.485Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [CouchDbRestStore] [PUT] 'whisk_local_activations' saving document: 'id: guest/8f0bfab190cf4acd8bfab190cf0acd50, rev: null' [marker:database_saveDocument_start:520]
+[2019-05-03T18:32:55.487Z] [INFO] [#tid_sid_dbBatcher] [CouchDbRestStore] 'whisk_local_activations' saving 1 documents [marker:database_saveDocumentBulk_start:87321]
+[2019-05-03T18:32:55.490Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [InvokerReactive] posted completion of activation 8f0bfab190cf4acd8bfab190cf0acd50
+[2019-05-03T18:32:55.514Z] [INFO] [#tid_sid_dbBatcher] [CouchDbRestStore]  [marker:database_saveDocumentBulk_finish:87347:26]
+[2019-05-03T18:32:55.514Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [CouchDbRestStore]  [marker:database_saveDocument_finish:549:29]
