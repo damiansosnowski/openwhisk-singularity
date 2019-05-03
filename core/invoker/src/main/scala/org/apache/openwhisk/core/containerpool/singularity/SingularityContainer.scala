@@ -77,28 +77,27 @@ object SingularityContainer {
 //      case (key, value) => Seq("-e", s"$key=$value")
 //    }
 
-//    val params = singularityRunParameters.flatMap {
-//      case (key, valueList) => valueList.toList.flatMap(Seq(key, _))
-//    }
+    val params = singularityRunParameters.flatMap {
+      case (key, valueList) => valueList.toList.flatMap(Seq(key, _))
+    }
 
-    // NOTE: --dns-option on modern versions of singularity, but is --dns-opt on singularity 1.12
     val dnsOptString = if (singularity.clientVersion.startsWith("1.12")) { "--dns-opt" } else { "--dns-option" }
-    val args = Seq.empty
-//    val args = Seq(
-//      "--cpu-shares",
-//      cpuShares.toString,
-//      "--memory",
-//      s"${memory.toMB}m",
-//      "--memory-swap",
-//      s"${memory.toMB}m",
-//      "--network",
-//      network) ++
-//      environmentArgs ++
-//      dnsServers.flatMap(d => Seq("--dns", d)) ++
-//      dnsSearch.flatMap(d => Seq("--dns-search", d)) ++
-//      dnsOptions.flatMap(d => Seq(dnsOptString, d)) ++
-//      name.map(n => Seq("--name", n)).getOrElse(Seq.empty) ++
-//      params
+    // val args = Seq.empty
+    val args =
+      // "--cpu-shares",
+      // cpuShares.toString,
+      // "--memory",
+      // s"${memory.toMB}m",
+      // "--memory-swap",
+      // s"${memory.toMB}m",
+      // "--network",
+      // network) ++
+      // environmentArgs ++
+      // dnsServers.flatMap(d => Seq("--dns", d)) ++
+      // dnsSearch.flatMap(d => Seq("--dns-search", d)) ++
+      // dnsOptions.flatMap(d => Seq(dnsOptString, d)) ++
+      name.map(n => Seq("--name", n)).getOrElse(Seq.empty) ++
+      params
 
     val imageToUse = image.fold(_.publicImageName, identity)
 

@@ -112,7 +112,7 @@ class SingularityClient(singularityHost: Option[String] = None,
   }
   val clientVersion: String = getClientVersion()
 
-  protected val maxParallelRuns = config.parallelRuns
+  protected val maxParallelRuns = 5 //config.parallelRuns
   protected val runSemaphore =
     new Semaphore( /* permits= */ if (maxParallelRuns > 0) maxParallelRuns else Int.MaxValue, /* fair= */ true)
 
@@ -137,8 +137,13 @@ class SingularityClient(singularityHost: Option[String] = None,
       val containerID = "Random" ++ (r.nextInt(100000)).toString()
 
       // ++ args were removed temporarily
-
+      
       runCmd(Seq("instance", "start") ++ Seq(("docker://" ++ image), containerID.toString), config.timeouts.run)
+        .andThen {
+          case _ =>
+            log.info(this, "instance start has ended here")
+        }
+      runCmd(Seq("run", "--pwd", "/nodejsAction") ++ Seq("instance://" ++ containerID.toString), config.timeouts.run)
         .andThen {
           // Release the semaphore as quick as possible regardless of the runCmd() result
           case _ =>
@@ -146,14 +151,14 @@ class SingularityClient(singularityHost: Option[String] = None,
             Future.successful(ContainerId(containerID))
         }
         .map(ContainerId.apply)
-//        .recoverWith {
-//          case pre: ProcessUnsuccessfulException if pre.exitStatus == ExitStatus(255) =>
-//            Future.failed(
-//              SingularityContainerId
-//                .parse(pre.stdout)
-//                .map(BrokenSingularityContainer(_, s"Broken container: ${pre.getMessage}"))
-//                .getOrElse(pre))
-//        }
+        // .recoverWith {
+        //   case pre: ProcessUnsuccessfulException if pre.exitStatus == ExitStatus(255) =>
+        //     Future.failed(
+        //       SingularityContainerId
+        //         .parse(pre.stdout)
+        //         .map(BrokenSingularityContainer(_, s"Broken container: ${pre.getMessage}"))
+        //         .getOrElse(pre))
+        // }
     }
   }
 
