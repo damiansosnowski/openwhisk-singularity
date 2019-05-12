@@ -1,0 +1,7 @@
+Bootstrap: docker
+From: openwhisk/nodejs6action:latest
+Includecmd: yes
+
+%startscript
+    cd /nodejsAction
+    node --expose-gc app.js

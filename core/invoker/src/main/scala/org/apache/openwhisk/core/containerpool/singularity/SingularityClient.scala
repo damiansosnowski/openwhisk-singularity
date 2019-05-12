@@ -21,7 +21,6 @@ import java.io.FileNotFoundException
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.concurrent.Semaphore
-import java.util.concurrent.atomic.AtomicInteger
 
 import akka.actor.ActorSystem
 
@@ -137,7 +136,7 @@ class SingularityClient(singularityHost: Option[String] = None,
       val r = scala.util.Random
       val containerID = "Random" ++ (r.nextInt(100000)).toString()
       
-      runCmd(Seq("instance", "start") ++ Seq(("/nodejs6action.sif"), containerID.toString), config.timeouts.run)
+      runCmd(Seq("instance", "start", "--net", "-C", "--writable-tmpfs") ++ Seq(("/nodejs6action.sif"), containerID.toString), config.timeouts.run)
         .andThen {
           case _ =>
             runSemaphore.release()
@@ -155,11 +154,11 @@ class SingularityClient(singularityHost: Option[String] = None,
     }
   }
 
-  def inspectIPAddress(id: ContainerId)(implicit transid: TransactionId): Future[ContainerAddress] =
+  def inspectIPAddress(containerID: ContainerId)(implicit transid: TransactionId): Future[ContainerAddress] =
     runCmd(Seq("exec", ("instance://" ++ containerID.toString), "hostname", "-I"), config.timeouts.run)
       .flatMap {
-      case "<no value>" => Future.failed(new NoSuchElementException)
-      case stdout       => Future.successful(ContainerAddress(stdout))
+        case "<no value>" => Future.failed(new NoSuchElementException)
+        case stdout       => Future.successful(ContainerAddress(stdout))
     }
 
   def pause(id: ContainerId)(implicit transid: TransactionId): Future[Unit] =

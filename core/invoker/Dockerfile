@@ -44,6 +44,8 @@ COPY nodejs6action.sif /
 # chmod +x /usr/bin/docker && \
 # chmod +x /usr/bin/docker-runc
 
+RUN apk add iptables
+
 ADD build/distributions/invoker.tar ./
 
 COPY init.sh /
@@ -52,3 +54,4 @@ RUN adduser -D -u ${UID} -h /home/${NOT_ROOT_USER} -s /bin/bash ${NOT_ROOT_USER}
 
 EXPOSE 8080
 CMD ["./init.sh", "0"]
+
