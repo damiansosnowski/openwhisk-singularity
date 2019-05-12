@@ -143,6 +143,13 @@ class SingularityClient(singularityHost: Option[String] = None,
           case _ =>
             log.info(this, "instance start has ended here")
         }
+
+      runNotSingularityCmd(Seq("exec", ("instance://" ++ containerID.toString), "hostname", "-I"), config.timeouts.run)
+        .andThen {
+          case _ =>
+            log.info(this, "ip here or above")
+        }
+
       runCmd(Seq("run", "--pwd", "/nodejsAction") ++ Seq("instance://" ++ containerID.toString), config.timeouts.run)
         .andThen {
           // Release the semaphore as quick as possible regardless of the runCmd() result
@@ -215,6 +222,24 @@ class SingularityClient(singularityHost: Option[String] = None,
       logLevel = InfoLevel)
     executeProcess(cmd, timeout).andThen {
       case Success(_) => transid.finished(this, start)
+      case Failure(pte: ProcessTimeoutException) =>
+        transid.failed(this, start, pte.getMessage, ErrorLevel)
+        MetricEmitter.emitCounterMetric(LoggingMarkers.INVOKER_SINGULARITY_CMD_TIMEOUT(args.head))
+      case Failure(t) => transid.failed(this, start, t.getMessage, ErrorLevel)
+    }
+  }
+
+  protected def runNotSingularityCmd(args: Seq[String], timeout: Duration)(implicit transid: TransactionId): Future[String] = {
+    val cmd = singularityCmd ++ args
+    val start = transid.started(
+      this,
+      LoggingMarkers.INVOKER_SINGULARITY_CMD(args.head),
+      s"running ${cmd.mkString(" ")} (timeout: $timeout)",
+      logLevel = InfoLevel)
+    executeProcess(cmd, timeout).andThen {
+      case Success(s) =>
+        log.info(this, s"rofl")
+        transid.finished(this, start)
       case Failure(pte: ProcessTimeoutException) =>
         transid.failed(this, start, pte.getMessage, ErrorLevel)
         MetricEmitter.emitCounterMetric(LoggingMarkers.INVOKER_SINGULARITY_CMD_TIMEOUT(args.head))
