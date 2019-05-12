@@ -113,7 +113,7 @@ class SingularityClient(singularityHost: Option[String] = None,
   }
   val clientVersion: String = getClientVersion()
 
-  protected val maxParallelRuns = 5 //config.parallelRuns
+  protected val maxParallelRuns = 10 //config.parallelRuns
   protected val runSemaphore =
     new Semaphore( /* permits= */ if (maxParallelRuns > 0) maxParallelRuns else Int.MaxValue, /* fair= */ true)
 
@@ -136,41 +136,9 @@ class SingularityClient(singularityHost: Option[String] = None,
       // Iff the semaphore was acquired successfully
       val r = scala.util.Random
       val containerID = "Random" ++ (r.nextInt(100000)).toString()
-      val monitor: Some[AnyRef] = Some(new AnyRef)
-      val unlocked: Some[AtomicInteger] = Some(new AtomicInteger(0))
-      // ++ args were removed temporarily
-
-      val instanceStartingSemaphore = new Semaphore(1, true)
-
-      // runCmd(Seq("instance", "start") ++ Seq(("docker://" ++ image), containerID.toString), config.timeouts.run)
       
-      instanceStartingSemaphore.acquire()
-      // ) ++ Seq(("/nodejs6action.sif"), containerID.toString)
-      runCmd(Seq("instance", "start", "shub://vsoch/hello-world", containerID.toString, "> /output.txt", "$"), config.timeouts.run, monitor, unlocked)
+      runCmd(Seq("instance", "start") ++ Seq(("/nodejs6action.sif"), containerID.toString), config.timeouts.run)
         .andThen {
-          case _ =>
-            log.info(this, "before release")
-            instanceStartingSemaphore.release()
-            log.info(this, "after release")
-        }
-
-      // waitUntilUnlocked(monitor, unlocked)
-      log.info(this, "before acquire")
-      instanceStartingSemaphore.acquire()
-      instanceStartingSemaphore.release()
-      log.info(this, "after acquire")
-
-      runCmd(Seq("exec", ("instance://" ++ containerID.toString), "hostname", "-I"), config.timeouts.run, monitor, unlocked)
-        .andThen {
-          case _ =>
-            log.info(this, "ip here or above")
-        }
-
-      //waitUntilUnlocked(monitor, unlocked)
-
-      runCmd(Seq("run", "--pwd", "/nodejsAction") ++ Seq("instance://" ++ containerID.toString), config.timeouts.run, monitor, unlocked)
-        .andThen {
-          // Release the semaphore as quick as possible regardless of the runCmd() result
           case _ =>
             runSemaphore.release()
             Future.successful(ContainerId(containerID))
@@ -188,13 +156,11 @@ class SingularityClient(singularityHost: Option[String] = None,
   }
 
   def inspectIPAddress(id: ContainerId)(implicit transid: TransactionId): Future[ContainerAddress] =
-    Future.successful(ContainerAddress("localhost"))
-//    runCmd(
-//      Seq("inspect", "--format", s"{{.NetworkSettings.Networks.${network}.IPAddress}}", id.asString),
-//      config.timeouts.inspect).flatMap {
-//      case "<no value>" => Future.failed(new NoSuchElementException)
-//      case stdout       => Future.successful(ContainerAddress(stdout))
-//    }
+    runCmd(Seq("exec", ("instance://" ++ containerID.toString), "hostname", "-I"), config.timeouts.run)
+      .flatMap {
+      case "<no value>" => Future.failed(new NoSuchElementException)
+      case stdout       => Future.successful(ContainerAddress(stdout))
+    }
 
   def pause(id: ContainerId)(implicit transid: TransactionId): Future[Unit] =
     Future.successful(())
@@ -231,9 +197,7 @@ class SingularityClient(singularityHost: Option[String] = None,
     Future.successful(true)
 //    runCmd(Seq("inspect", id.asString, "--format", "{{.State.OOMKilled}}"), config.timeouts.inspect).map(_.toBoolean)
 
-  protected def runCmd(args: Seq[String], timeout: Duration, 
-                       monitor: Option[AnyRef] = None, unlocked: Option[AtomicInteger] = None)
-                       (implicit transid: TransactionId): Future[String] = {
+  protected def runCmd(args: Seq[String], timeout: Duration)(implicit transid: TransactionId): Future[String] = {
     val cmd = singularityCmd ++ args
     val start = transid.started(
       this,
@@ -242,37 +206,13 @@ class SingularityClient(singularityHost: Option[String] = None,
       logLevel = InfoLevel)
     executeProcess(cmd, timeout).andThen {
       case Success(_) =>
-        // log.info(this, "here5")
-        // unlock(monitor, unlocked)
-        // log.info(this, "here6")
         transid.finished(this, start)
       case Failure(pte: ProcessTimeoutException) =>
-        // log.info(this, "here7")
-        // unlock(monitor, unlocked)
         transid.failed(this, start, pte.getMessage, ErrorLevel)
         MetricEmitter.emitCounterMetric(LoggingMarkers.INVOKER_SINGULARITY_CMD_TIMEOUT(args.head))
       case Failure(t) =>
-        // log.info(this, "here8")
-        // unlock(monitor, unlocked)
         transid.failed(this, start, t.getMessage, ErrorLevel)
     }
-  }
-
-  def waitUntilUnlocked(monitor: Option[AnyRef] = None, unlocked: Option[AtomicInteger] = None): Unit = monitor synchronized {
-    if(monitor.isEmpty || unlocked.isEmpty) return
-    log.info(this, "here1")
-    while(unlocked.get.get() == 0) monitor.wait
-    log.info(this, "here2")
-  }
-
-  def unlock(monitor: Option[AnyRef] = None, unlocked: Option[AtomicInteger] = None): Unit = monitor synchronized {
-    log.info(this, "hereUnlock")
-    if(monitor.isEmpty || unlocked.isEmpty) return
-    log.info(this, "hereUnlock1")
-    unlocked.get.set(1)
-    log.info(this, "here3")
-    monitor.notifyAll
-    log.info(this, "here4")
   }
 }
 
