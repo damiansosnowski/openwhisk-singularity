@@ -132,7 +132,7 @@ class SingularityClient(singularityHost: Option[String] = None,
         runSemaphore.acquire()
       }
     }.flatMap { _ =>
-      // Iff the semaphore was acquired successfully
+      // If the semaphore was acquired successfully
       val r = scala.util.Random
       val containerID = "Random" ++ (r.nextInt(100000)).toString()
       
@@ -140,25 +140,28 @@ class SingularityClient(singularityHost: Option[String] = None,
         .andThen {
           case _ =>
             runSemaphore.release()
-            Future.successful(ContainerId(containerID))
         }
         .map(ContainerId.apply)
-        // .recoverWith {
-        //   case pre: ProcessUnsuccessfulException if pre.exitStatus == ExitStatus(255) =>
-        //     Future.failed(
-        //       SingularityContainerId
-        //         .parse(pre.stdout)
-        //         .map(BrokenSingularityContainer(_, s"Broken container: ${pre.getMessage}"))
-        //         .getOrElse(pre))
-        // }
+        .recoverWith {
+          case pre: ProcessUnsuccessfulException if pre.exitStatus == ExitStatus(255) =>
+            Future.failed(
+              SingularityContainerId
+                .parse(pre.stdout)
+                .map(BrokenSingularityContainer(_, s"Broken container: ${pre.getMessage}"))
+                .getOrElse(pre))
+        }
     }
   }
 
   def inspectIPAddress(containerID: ContainerId)(implicit transid: TransactionId): Future[ContainerAddress] =
     runCmd(Seq("exec", ("instance://" ++ containerID.toString), "hostname", "-I"), config.timeouts.run)
       .flatMap {
-        case "<no value>" => Future.failed(new NoSuchElementException)
-        case stdout       => Future.successful(ContainerAddress(stdout))
+        case "<no value>" => 
+          log.info(this, "InspectIP1")
+          Future.failed(new NoSuchElementException)
+        case stdout       => 
+          log.info(this, "InspectIP2")
+          Future.successful(ContainerAddress(stdout))
     }
 
   def pause(id: ContainerId)(implicit transid: TransactionId): Future[Unit] =

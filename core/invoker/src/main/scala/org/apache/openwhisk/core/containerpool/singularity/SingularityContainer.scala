@@ -106,6 +106,7 @@ object SingularityContainer {
         // Iff the image tag is "latest" explicitly (or implicitly because no tag is given at all), failing to pull will
         // fail the whole container bringup process, because it is expected to pick up the very latest "untagged"
         // version every time.
+        log.info(this, "here1")
         singularity.pull(imageToUse).map(_ => true).recoverWith {
           case _ => Future.failed(BlackboxStartupError(Messages.imagePullError(imageToUse)))
         }
@@ -113,9 +114,11 @@ object SingularityContainer {
         // Iff the image tag is something else than latest, we tolerate an outdated image if one is available locally.
         // A `singularity run` will be tried nonetheless to try to start a container (which will succeed if the image is
         // already available locally)
+        log.info(this, "here2")
         singularity.pull(imageToUse).map(_ => true).recover { case _ => false }
       case Right(_) =>
         // Iff we're not pulling at all (OpenWhisk provided image) we act as if the pull was successful.
+        log.info(this, "here3")
         Future.successful(true)
     }
 
@@ -125,12 +128,14 @@ object SingularityContainer {
         case BrokenSingularityContainer(brokenId, _) =>
           // Remove the broken container - but don't wait or check for the result.
           // If the removal fails, there is nothing we could do to recover from the recovery.
+          log.info(this, "here4")
           singularity.rm(brokenId)
           Future.failed(WhiskContainerStartupError(Messages.resourceProvisionError))
         case _ =>
           // Iff the pull was successful, we assume that the error is not due to an image pull error, otherwise
           // the singularity run was a backup measure to try and start the container anyway. If it fails again, we assume
           // the image could still not be pulled and wasn't available locally.
+          log.info(this, "here5")
           if (pullSuccessful) {
             Future.failed(WhiskContainerStartupError(Messages.resourceProvisionError))
           } else {
@@ -141,6 +146,7 @@ object SingularityContainer {
         // remove the container immediately if inspect failed as
         // we cannot recover that case automatically
         case _ =>
+          log.info(this, "here6")
           singularity.rm(id)
           Future.failed(WhiskContainerStartupError(Messages.resourceProvisionError))
       }
