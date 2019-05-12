@@ -32,6 +32,8 @@ RUN source ~/.bashrc && \
     make -C ./builddir && \
     make -C ./builddir install
 
+COPY nodejs6action.sif /
+
 # Uncomment to fetch latest version of docker instead: RUN wget -qO- https://get.docker.com | sh
 # Install docker client
 # RUN curl -sSL -o docker-${DOCKER_VERSION}.tgz https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz && \

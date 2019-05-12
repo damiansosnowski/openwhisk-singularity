@@ -21,6 +21,7 @@ import java.io.FileNotFoundException
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.concurrent.Semaphore
+import java.util.concurrent.atomic.AtomicInteger
 
 import akka.actor.ActorSystem
 
@@ -87,7 +88,7 @@ class SingularityClient(singularityHost: Option[String] = None,
   // Determines how to run singularity. Failure to find a Singularity binary implies
   // a failure to initialize this instance of SingularityClient.
   protected val singularityCmd: Seq[String] = {
-    val alternatives = List("/usr/bin/singularity", "/usr/local/bin/singularity")
+    val alternatives = List("/usr/local/bin/singularity")
 
     val singularityBin = Try {
       alternatives.find(a => Files.isExecutable(Paths.get(a))).get
@@ -135,22 +136,39 @@ class SingularityClient(singularityHost: Option[String] = None,
       // Iff the semaphore was acquired successfully
       val r = scala.util.Random
       val containerID = "Random" ++ (r.nextInt(100000)).toString()
-
+      val monitor: Some[AnyRef] = Some(new AnyRef)
+      val unlocked: Some[AtomicInteger] = Some(new AtomicInteger(0))
       // ++ args were removed temporarily
+
+      val instanceStartingSemaphore = new Semaphore(1, true)
+
+      // runCmd(Seq("instance", "start") ++ Seq(("docker://" ++ image), containerID.toString), config.timeouts.run)
       
-      runCmd(Seq("instance", "start") ++ Seq(("docker://" ++ image), containerID.toString), config.timeouts.run)
+      instanceStartingSemaphore.acquire()
+      // ) ++ Seq(("/nodejs6action.sif"), containerID.toString)
+      runCmd(Seq("instance", "start", "shub://vsoch/hello-world", containerID.toString, "> /output.txt", "$"), config.timeouts.run, monitor, unlocked)
         .andThen {
           case _ =>
-            log.info(this, "instance start has ended here")
+            log.info(this, "before release")
+            instanceStartingSemaphore.release()
+            log.info(this, "after release")
         }
 
-      runNotSingularityCmd(Seq("exec", ("instance://" ++ containerID.toString), "hostname", "-I"), config.timeouts.run)
+      // waitUntilUnlocked(monitor, unlocked)
+      log.info(this, "before acquire")
+      instanceStartingSemaphore.acquire()
+      instanceStartingSemaphore.release()
+      log.info(this, "after acquire")
+
+      runCmd(Seq("exec", ("instance://" ++ containerID.toString), "hostname", "-I"), config.timeouts.run, monitor, unlocked)
         .andThen {
           case _ =>
             log.info(this, "ip here or above")
         }
 
-      runCmd(Seq("run", "--pwd", "/nodejsAction") ++ Seq("instance://" ++ containerID.toString), config.timeouts.run)
+      //waitUntilUnlocked(monitor, unlocked)
+
+      runCmd(Seq("run", "--pwd", "/nodejsAction") ++ Seq("instance://" ++ containerID.toString), config.timeouts.run, monitor, unlocked)
         .andThen {
           // Release the semaphore as quick as possible regardless of the runCmd() result
           case _ =>
@@ -213,7 +231,9 @@ class SingularityClient(singularityHost: Option[String] = None,
     Future.successful(true)
 //    runCmd(Seq("inspect", id.asString, "--format", "{{.State.OOMKilled}}"), config.timeouts.inspect).map(_.toBoolean)
 
-  protected def runCmd(args: Seq[String], timeout: Duration)(implicit transid: TransactionId): Future[String] = {
+  protected def runCmd(args: Seq[String], timeout: Duration, 
+                       monitor: Option[AnyRef] = None, unlocked: Option[AtomicInteger] = None)
+                       (implicit transid: TransactionId): Future[String] = {
     val cmd = singularityCmd ++ args
     val start = transid.started(
       this,
@@ -221,30 +241,38 @@ class SingularityClient(singularityHost: Option[String] = None,
       s"running ${cmd.mkString(" ")} (timeout: $timeout)",
       logLevel = InfoLevel)
     executeProcess(cmd, timeout).andThen {
-      case Success(_) => transid.finished(this, start)
+      case Success(_) =>
+        // log.info(this, "here5")
+        // unlock(monitor, unlocked)
+        // log.info(this, "here6")
+        transid.finished(this, start)
       case Failure(pte: ProcessTimeoutException) =>
+        // log.info(this, "here7")
+        // unlock(monitor, unlocked)
         transid.failed(this, start, pte.getMessage, ErrorLevel)
         MetricEmitter.emitCounterMetric(LoggingMarkers.INVOKER_SINGULARITY_CMD_TIMEOUT(args.head))
-      case Failure(t) => transid.failed(this, start, t.getMessage, ErrorLevel)
+      case Failure(t) =>
+        // log.info(this, "here8")
+        // unlock(monitor, unlocked)
+        transid.failed(this, start, t.getMessage, ErrorLevel)
     }
   }
 
-  protected def runNotSingularityCmd(args: Seq[String], timeout: Duration)(implicit transid: TransactionId): Future[String] = {
-    val cmd = singularityCmd ++ args
-    val start = transid.started(
-      this,
-      LoggingMarkers.INVOKER_SINGULARITY_CMD(args.head),
-      s"running ${cmd.mkString(" ")} (timeout: $timeout)",
-      logLevel = InfoLevel)
-    executeProcess(cmd, timeout).andThen {
-      case Success(s) =>
-        log.info(this, s"rofl")
-        transid.finished(this, start)
-      case Failure(pte: ProcessTimeoutException) =>
-        transid.failed(this, start, pte.getMessage, ErrorLevel)
-        MetricEmitter.emitCounterMetric(LoggingMarkers.INVOKER_SINGULARITY_CMD_TIMEOUT(args.head))
-      case Failure(t) => transid.failed(this, start, t.getMessage, ErrorLevel)
-    }
+  def waitUntilUnlocked(monitor: Option[AnyRef] = None, unlocked: Option[AtomicInteger] = None): Unit = monitor synchronized {
+    if(monitor.isEmpty || unlocked.isEmpty) return
+    log.info(this, "here1")
+    while(unlocked.get.get() == 0) monitor.wait
+    log.info(this, "here2")
+  }
+
+  def unlock(monitor: Option[AnyRef] = None, unlocked: Option[AtomicInteger] = None): Unit = monitor synchronized {
+    log.info(this, "hereUnlock")
+    if(monitor.isEmpty || unlocked.isEmpty) return
+    log.info(this, "hereUnlock1")
+    unlocked.get.set(1)
+    log.info(this, "here3")
+    monitor.notifyAll
+    log.info(this, "here4")
   }
 }
 

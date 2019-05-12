@@ -1,4 +1,5 @@
 *
 !init.sh
+!nodejs6action.sif
 !build/distributions
 !build/tmp/docker-coverage
