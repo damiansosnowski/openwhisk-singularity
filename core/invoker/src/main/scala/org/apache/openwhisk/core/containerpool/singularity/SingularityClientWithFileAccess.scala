@@ -135,7 +135,8 @@ class SingularityClientWithFileAccess(singularityHost: Option[String] = None,
   // See extended trait for description
   override def inspectIPAddress(id: ContainerId)(
     implicit transid: TransactionId): Future[ContainerAddress] = {
-    super.inspectIPAddress(id)
+      Thread.sleep(1000)
+      super.inspectIPAddress(id)
   }
 
   // Singularity remake - This function will not be called now

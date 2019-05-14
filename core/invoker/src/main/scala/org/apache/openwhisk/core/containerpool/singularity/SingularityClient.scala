@@ -46,8 +46,10 @@ object SingularityContainerId {
 
   def parse(id: String): Try[ContainerId] = {
     id match {
-      case containerIdRegex(_) => Success(ContainerId(id))
-      case _                   => Failure(new IllegalArgumentException(s"Does not comply with Singularity container ID format: ${id}"))
+      case containerIdRegex(_) => 
+        Success(ContainerId(id))
+      case _                   => 
+        Failure(new IllegalArgumentException(s"Does not comply with Singularity container ID format: ${id}"))
     }
   }
 }
@@ -125,43 +127,67 @@ class SingularityClient(singularityHost: Option[String] = None,
 
   def run(image: String, args: Seq[String] = Seq.empty[String])(
     implicit transid: TransactionId): Future[ContainerId] = {
-    Future {
+    // Future {
       blocking {
         // Acquires a permit from this semaphore, blocking until one is available, or the thread is interrupted.
         // Throws InterruptedException if the current thread is interrupted
         runSemaphore.acquire()
       }
-    }.flatMap { _ =>
-      // If the semaphore was acquired successfully
+
       val r = scala.util.Random
-      val containerID = "Random" ++ (r.nextInt(100000)).toString()
-      
-      runCmd(Seq("instance", "start", "--net", "-C", "--writable-tmpfs") ++ Seq(("/nodejs6action.sif"), containerID.toString), config.timeouts.run)
+      val id = "Random" ++ (r.nextInt(100000)).toString()
+
+      runCmd(Seq("instance", "start", "--net", "-C", "--writable-tmpfs") ++ Seq(("/nodejs6action.sif"), id.toString), config.timeouts.run)
         .andThen {
-          case _ =>
+          case _ => 
             runSemaphore.release()
         }
-        .map(ContainerId.apply)
-        .recoverWith {
-          case pre: ProcessUnsuccessfulException if pre.exitStatus == ExitStatus(255) =>
-            Future.failed(
-              SingularityContainerId
-                .parse(pre.stdout)
-                .map(BrokenSingularityContainer(_, s"Broken container: ${pre.getMessage}"))
-                .getOrElse(pre))
-        }
-    }
+      
+      Future.successful(ContainerId(id.toString))
+    //}.flatMap { _ =>
+    //   // If the semaphore was acquired successfully
+    //   val r = scala.util.Random
+    //   val id = "Random" ++ (r.nextInt(100000)).toString()
+      
+    //   runCmd(Seq("instance", "start", "--net", "-C", "--writable-tmpfs") ++ Seq(("/nodejs6action.sif"), id.toString), config.timeouts.run)
+    //     .andThen {
+    //       case _ => 
+    //         runSemaphore.release()
+    //         Future.successful(ContainerId(id.toString))
+    //     }
+        // .map(ContainerId.apply)
+        // .recoverWith {
+        //   case _ =>
+        //     Future.successful(
+        //       SingularityContainerId
+        //         .parse(pre.stdout)
+        //         .map(BrokenSingularityContainer(_, s"Broken container: ${pre.getMessage}"))
+        //         .getOrElse(pre))
+        //   case pre: ProcessUnsuccessfulException if pre.exitStatus == ExitStatus(125) =>
+        //     log.info(this, "fail1" ++ pre.stdout)
+        //     Future.failed(
+        //       SingularityContainerId
+        //         .parse(pre.stdout)
+        //         .map(BrokenSingularityContainer(_, s"Broken container: ${pre.getMessage}"))
+        //         .getOrElse(pre))
+        //   case t: ProcessUnsuccessfulException =>
+        //     log.info(this, "fail2" ++ t.stdout)
+        //     Future.failed(
+        //       SingularityContainerId
+        //         .parse(t.stdout)
+        //         .map(BrokenSingularityContainer(_, s"Broken container:"))
+        //         .getOrElse(t))
+        // }
+    // }
   }
 
-  def inspectIPAddress(containerID: ContainerId)(implicit transid: TransactionId): Future[ContainerAddress] =
-    runCmd(Seq("exec", ("instance://" ++ containerID.toString), "hostname", "-I"), config.timeouts.run)
+  def inspectIPAddress(id: ContainerId)(implicit transid: TransactionId): Future[ContainerAddress] =
+    runCmd(Seq("exec", ("instance://" ++ id.asString), "hostname", "-I"), config.timeouts.run)
       .flatMap {
         case "<no value>" => 
-          log.info(this, "InspectIP1")
           Future.failed(new NoSuchElementException)
         case stdout       => 
-          log.info(this, "InspectIP2")
-          Future.successful(ContainerAddress(stdout))
+          Future.successful(ContainerAddress(stdout.replaceAll("\\s", "")))
     }
 
   def pause(id: ContainerId)(implicit transid: TransactionId): Future[Unit] =

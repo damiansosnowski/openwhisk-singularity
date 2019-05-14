@@ -1,74 +1,48 @@
 Picked up JAVA_TOOL_OPTIONS: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
-[2019-05-03T18:31:04.424Z] [INFO] Loaded metric reporter [kamon.statsd.StatsDReporter]
-[2019-05-03T18:31:04.406Z] [INFO] Started the Kamon StatsD reporter
-[2019-05-03T18:31:04.732Z] [INFO] Slf4jLogger started
-[2019-05-03T18:31:04.885Z] [INFO] Starting remoting
-[2019-05-03T18:31:05.012Z] [INFO] Remoting started; listening on addresses :[akka.tcp://controller-actor-system@172.17.0.1:8000]
-[2019-05-03T18:31:05.014Z] [INFO] Remoting now listens on addresses: [akka.tcp://controller-actor-system@172.17.0.1:8000]
-[2019-05-03T18:31:05.032Z] [INFO] Cluster Node [akka.tcp://controller-actor-system@172.17.0.1:8000] - Starting up...
-[2019-05-03T18:31:05.071Z] [INFO] Cluster Node [akka.tcp://controller-actor-system@172.17.0.1:8000] - Registered cluster JMX MBean [akka:type=Cluster]
-[2019-05-03T18:31:05.071Z] [INFO] Cluster Node [akka.tcp://controller-actor-system@172.17.0.1:8000] - Started up successfully
-[2019-05-03T18:31:05.128Z] [INFO] Cluster Node [akka.tcp://controller-actor-system@172.17.0.1:8000] - Node [akka.tcp://controller-actor-system@172.17.0.1:8000] is JOINING, roles [dc-default]
-[2019-05-03T18:31:05.154Z] [INFO] Cluster Node [akka.tcp://controller-actor-system@172.17.0.1:8000] - Leader is moving node [akka.tcp://controller-actor-system@172.17.0.1:8000] to [Up]
-[2019-05-03T18:31:05.459Z] [INFO] [#tid_sid_unknown] [Config] environment set value for limits.triggers.fires.perMinute
-[2019-05-03T18:31:05.460Z] [INFO] [#tid_sid_unknown] [Config] environment set value for limits.actions.sequence.maxLength
-[2019-05-03T18:31:05.461Z] [INFO] [#tid_sid_unknown] [Config] environment set value for limits.actions.invokes.concurrent
-[2019-05-03T18:31:05.461Z] [INFO] [#tid_sid_unknown] [Config] environment set value for controller.instances
-[2019-05-03T18:31:05.462Z] [INFO] [#tid_sid_unknown] [Config] environment set value for limits.actions.invokes.perMinute
-[2019-05-03T18:31:05.463Z] [INFO] [#tid_sid_unknown] [Config] environment set value for runtimes.manifest
-[2019-05-03T18:31:05.463Z] [INFO] [#tid_sid_unknown] [Config] environment set value for kafka.hosts
-[2019-05-03T18:31:05.464Z] [INFO] [#tid_sid_unknown] [Config] environment set value for port
-[2019-05-03T18:31:06.139Z] [INFO] [#tid_sid_unknown] [KafkaMessagingProvider] created topic completed0
-[2019-05-03T18:31:06.455Z] [INFO] [#tid_sid_unknown] [KafkaMessagingProvider] created topic health
-[2019-05-03T18:31:06.661Z] [INFO] [#tid_sid_unknown] [KafkaMessagingProvider] created topic cacheInvalidation
-[2019-05-03T18:31:06.787Z] [INFO] [#tid_sid_unknown] [KafkaMessagingProvider] created topic events
-[2019-05-03T18:31:07.022Z] [INFO] [#tid_sid_controller] [Controller] starting controller instance 0 [marker:controller_startup0_count:1565]
-[2019-05-03T18:31:07.786Z] [INFO] [#tid_sid_dispatcher] [MessageFeed] handler capacity = 128, pipeline fill at = 128, pipeline depth = 256
-[2019-05-03T18:31:08.363Z] [INFO] [#tid_sid_loadbalancer] [ShardingContainerPoolBalancerState] managedFraction = 0.9, blackboxFraction = 0.1
-[2019-05-03T18:31:08.511Z] [INFO] [#tid_sid_dispatcher] [MessageFeed] handler capacity = 128, pipeline fill at = 128, pipeline depth = 256
-[2019-05-03T18:31:09.553Z] [INFO] [#tid_sid_loadbalancer] [WhiskAction] [GET] serving from datastore: CacheKey(whisk.system/invokerHealthTestAction0) [marker:database_cacheMiss_count:4096]
-[2019-05-03T18:31:09.655Z] [INFO] [#tid_sid_loadbalancer] [CouchDbRestStore] [GET] 'whisk_local_whisks' finding document: 'id: whisk.system/invokerHealthTestAction0' [marker:database_getDocument_start:4195]
-[2019-05-03T18:31:10.128Z] [INFO] [#tid_sid_loadbalancer] [CouchDbRestStore]  [marker:database_getDocument_finish:4672:474]
-[2019-05-03T18:31:10.175Z] [INFO] [#tid_sid_loadbalancer] [WhiskAction] write initiated on existing cache entry, invalidating CacheKey(whisk.system/invokerHealthTestAction0), tid sid_loadbalancer, state WriteInProgress
-[2019-05-03T18:31:10.253Z] [INFO] [#tid_sid_loadbalancer] [CouchDbRestStore] [PUT] 'whisk_local_whisks' saving document: 'id: whisk.system/invokerHealthTestAction0, rev: 3-20e8ec466710c62271e31d576410fc07' [marker:database_saveDocument_start:4796]
-[2019-05-03T18:31:10.313Z] [INFO] [#tid_sid_loadbalancer] [CouchDbRestStore]  [marker:database_saveDocument_finish:4856:59]
-[2019-05-03T18:31:10.315Z] [INFO] [#tid_sid_loadbalancer] [WhiskAction] write all done, caching CacheKey(whisk.system/invokerHealthTestAction0) Cached
-[2019-05-03T18:31:10.324Z] [INFO] [#tid_sid_loadbalancer] [InvokerPool] test action for invoker health now exists
-[2019-05-03T18:31:10.413Z] [INFO] [#tid_sid_dispatcher] [MessageFeed] handler capacity = 128, pipeline fill at = 128, pipeline depth = 256
-[2019-05-03T18:31:10.424Z] [INFO] [#tid_sid_controller] [Controller] loadbalancer initialized: ShardingContainerPoolBalancer
-[2019-05-03T18:31:10.520Z] [INFO] [#tid_sid_controller] [KindRestrictor] all kinds are allowed, the white-list is not specified
-[2019-05-03T18:31:10.969Z] [INFO] [#tid_sid_controller] [ActionsApi] actionSequenceLimit '50'
-[2019-05-03T18:31:31.042Z] [INFO] [#tid_sid_invokerHealth] [InvokerPool] registered a new invoker: invoker0
-[2019-05-03T18:31:31.087Z] [INFO] [#tid_sid_invokerHealth] [InvokerActor] invoker0 is unhealthy [marker:loadbalancer_invokerState.unhealthy_count:25631]
-[2019-05-03T18:31:31.110Z] [INFO] [#tid_sid_invokerHealth] [ShardingContainerPoolBalancer] posting topic 'invoker0' with activation id 'e17f5959f12a4666bf5959f12a46667c' [marker:controller_kafka_start:25649]
-[2019-05-03T18:31:31.139Z] [INFO] [#tid_sid_invokerHealth] [InvokerPool] invoker status changed to 0 -> Unhealthy
-[2019-05-03T18:31:31.165Z] [INFO] [#tid_sid_loadbalancer] [ShardingContainerPoolBalancerState] loadbalancer invoker status updated. managedInvokers = 1 blackboxInvokers = 1
-[2019-05-03T18:31:31.195Z] [INFO] [#tid_sid_invokerHealth] [ShardingContainerPoolBalancer] posted to invoker0[0][0] [marker:controller_kafka_finish:25736:82]
-[2019-05-03T18:31:32.663Z] [INFO] [#tid_sid_invokerHealth] [ShardingContainerPoolBalancer] received completion ack for health action on invoker0/0
-[2019-05-03T18:31:32.671Z] [INFO] [#tid_sid_invokerHealth] [InvokerActor] invoker0 is up
-[2019-05-03T18:31:32.672Z] [INFO] [#tid_sid_invokerHealth] [InvokerPool] invoker status changed to 0 -> Healthy
-[2019-05-03T18:31:32.673Z] [INFO] [#tid_sid_loadbalancer] [ShardingContainerPoolBalancerState] loadbalancer invoker status updated. managedInvokers = 1 blackboxInvokers = 1
-[2019-05-03T18:32:54.968Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] POST /api/v1/namespaces/whisk.system/actions/utils/echo blocking=true&result=true
-[2019-05-03T18:32:54.994Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [BasicAuthenticationDirective] authenticate: 23bc46b1-71f6-4ed5-8c54-816aa4f8c502
-[2019-05-03T18:32:55.006Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [Identity] [GET] serving from datastore: CacheKey(23bc46b1-71f6-4ed5-8c54-816aa4f8c502) [marker:database_cacheMiss_count:39]
-[2019-05-03T18:32:55.008Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [CouchDbRestStore] [QUERY] 'whisk_local_subjects' searching 'subjects/identities [marker:database_queryView_start:43]
-[2019-05-03T18:32:55.105Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [CouchDbRestStore]  [marker:database_queryView_finish:140:97]
-[2019-05-03T18:32:55.180Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [WhiskPackage] [GET] serving from datastore: CacheKey(whisk.system/utils) [marker:database_cacheMiss_count:214]
-[2019-05-03T18:32:55.180Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [CouchDbRestStore] [GET] 'whisk_local_whisks' finding document: 'id: whisk.system/utils' [marker:database_getDocument_start:215]
-[2019-05-03T18:32:55.187Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [CouchDbRestStore]  [marker:database_getDocument_finish:221:6]
-[2019-05-03T18:32:55.208Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [WhiskPackage] [GET] serving from cache: CacheKey(whisk.system/utils) [marker:database_cacheHit_count:242]
-[2019-05-03T18:32:55.246Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [WhiskActionMetaData] [GET] serving from datastore: CacheKey(whisk.system/utils/echo) [marker:database_cacheMiss_count:280]
-[2019-05-03T18:32:55.246Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [CouchDbRestStore] [GET] 'whisk_local_whisks' finding document: 'id: whisk.system/utils/echo' [marker:database_getDocument_start:280]
-[2019-05-03T18:32:55.252Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [CouchDbRestStore]  [marker:database_getDocument_finish:287:7]
-[2019-05-03T18:32:55.275Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [ActionsApi]  [marker:controller_blockingActivation_start:309]
-[2019-05-03T18:32:55.275Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [ActionsApi] action activation id: 8f0bfab190cf4acd8bfab190cf0acd50 [marker:controller_loadbalancer_start:310]
-[2019-05-03T18:32:55.278Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [ShardingContainerPoolBalancer] activation 8f0bfab190cf4acd8bfab190cf0acd50 for 'whisk.system/utils/echo@0.0.1' (managed) by namespace 'guest' with memory limit 256MB assigned to invoker0/0
-[2019-05-03T18:32:55.283Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [ShardingContainerPoolBalancer] posting topic 'invoker0' with activation id '8f0bfab190cf4acd8bfab190cf0acd50' [marker:controller_kafka_start:318]
-[2019-05-03T18:32:55.301Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [ShardingContainerPoolBalancer] posted to invoker0[0][1] [marker:controller_kafka_finish:336:16]
-[2019-05-03T18:32:55.303Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [ActionsApi]  [marker:controller_loadbalancer_finish:337:27]
-[2019-05-03T18:32:55.492Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [ShardingContainerPoolBalancer] received completion ack for '8f0bfab190cf4acd8bfab190cf0acd50'
-[2019-05-03T18:33:10.369Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [CouchDbRestStore] [GET] 'whisk_local_activations' finding document: 'id: guest/8f0bfab190cf4acd8bfab190cf0acd50' [marker:database_getDocument_start:15400]
-[2019-05-03T18:33:10.402Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [CouchDbRestStore]  [marker:database_getDocument_finish:15434:34]
-[2019-05-03T18:33:10.417Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [ActionsApi] retrieved activation for blocking invocation via DB polling [marker:controller_blockingActivationDatabaseRetrieval_count:15450]
-[2019-05-03T18:33:10.418Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [ActionsApi]  [marker:controller_blockingActivation_finish:15450:15141]
-[2019-05-03T18:33:10.418Z] [INFO] [#tid_924215426b9c3af43c0ef5d346eb09e3] [BasicHttpService] [marker:http_post.500_count:15453:15453]
+[2019-05-14T20:38:50.565Z] [INFO] Started the Kamon StatsD reporter
+[2019-05-14T20:38:50.566Z] [INFO] Loaded metric reporter [kamon.statsd.StatsDReporter]
+[2019-05-14T20:38:50.929Z] [INFO] Slf4jLogger started
+[2019-05-14T20:38:51.123Z] [INFO] Starting remoting
+[2019-05-14T20:38:51.281Z] [INFO] Remoting started; listening on addresses :[akka.tcp://controller-actor-system@172.17.0.1:8000]
+[2019-05-14T20:38:51.283Z] [INFO] Remoting now listens on addresses: [akka.tcp://controller-actor-system@172.17.0.1:8000]
+[2019-05-14T20:38:51.299Z] [INFO] Cluster Node [akka.tcp://controller-actor-system@172.17.0.1:8000] - Starting up...
+[2019-05-14T20:38:51.360Z] [INFO] Cluster Node [akka.tcp://controller-actor-system@172.17.0.1:8000] - Registered cluster JMX MBean [akka:type=Cluster]
+[2019-05-14T20:38:51.360Z] [INFO] Cluster Node [akka.tcp://controller-actor-system@172.17.0.1:8000] - Started up successfully
+[2019-05-14T20:38:51.442Z] [INFO] Cluster Node [akka.tcp://controller-actor-system@172.17.0.1:8000] - Node [akka.tcp://controller-actor-system@172.17.0.1:8000] is JOINING, roles [dc-default]
+[2019-05-14T20:38:51.480Z] [INFO] Cluster Node [akka.tcp://controller-actor-system@172.17.0.1:8000] - Leader is moving node [akka.tcp://controller-actor-system@172.17.0.1:8000] to [Up]
+[2019-05-14T20:38:51.818Z] [INFO] [#tid_sid_unknown] [Config] environment set value for limits.triggers.fires.perMinute
+[2019-05-14T20:38:51.819Z] [INFO] [#tid_sid_unknown] [Config] environment set value for limits.actions.sequence.maxLength
+[2019-05-14T20:38:51.820Z] [INFO] [#tid_sid_unknown] [Config] environment set value for limits.actions.invokes.concurrent
+[2019-05-14T20:38:51.821Z] [INFO] [#tid_sid_unknown] [Config] environment set value for controller.instances
+[2019-05-14T20:38:51.822Z] [INFO] [#tid_sid_unknown] [Config] environment set value for limits.actions.invokes.perMinute
+[2019-05-14T20:38:51.822Z] [INFO] [#tid_sid_unknown] [Config] environment set value for runtimes.manifest
+[2019-05-14T20:38:51.822Z] [INFO] [#tid_sid_unknown] [Config] environment set value for kafka.hosts
+[2019-05-14T20:38:51.822Z] [INFO] [#tid_sid_unknown] [Config] environment set value for port
+[2019-05-14T20:38:52.258Z] [INFO] [#tid_sid_unknown] [KafkaMessagingProvider] topic completed0 already existed
+[2019-05-14T20:38:52.353Z] [INFO] [#tid_sid_unknown] [KafkaMessagingProvider] topic health already existed
+[2019-05-14T20:38:52.445Z] [INFO] [#tid_sid_unknown] [KafkaMessagingProvider] topic cacheInvalidation already existed
+[2019-05-14T20:38:52.536Z] [INFO] [#tid_sid_unknown] [KafkaMessagingProvider] topic events already existed
+[2019-05-14T20:38:52.773Z] [INFO] [#tid_sid_controller] [Controller] starting controller instance 0 [marker:controller_startup0_count:956]
+[2019-05-14T20:38:53.597Z] [INFO] [#tid_sid_dispatcher] [MessageFeed] handler capacity = 128, pipeline fill at = 128, pipeline depth = 256
+[2019-05-14T20:38:53.763Z] [INFO] [#tid_sid_loadbalancer] [ShardingContainerPoolBalancerState] managedFraction = 0.9, blackboxFraction = 0.1
+[2019-05-14T20:38:53.830Z] [INFO] [#tid_sid_dispatcher] [MessageFeed] handler capacity = 128, pipeline fill at = 128, pipeline depth = 256
+[2019-05-14T20:38:54.135Z] [INFO] [#tid_sid_loadbalancer] [WhiskAction] [GET] serving from datastore: CacheKey(whisk.system/invokerHealthTestAction0) [marker:database_cacheMiss_count:2318]
+[2019-05-14T20:38:54.160Z] [INFO] [#tid_sid_loadbalancer] [CouchDbRestStore] [GET] 'whisk_local_whisks' finding document: 'id: whisk.system/invokerHealthTestAction0' [marker:database_getDocument_start:2344]
+[2019-05-14T20:38:54.359Z] [INFO] [#tid_sid_loadbalancer] [CouchDbRestStore]  [marker:database_getDocument_finish:2543:198]
+[2019-05-14T20:38:54.389Z] [INFO] [#tid_sid_loadbalancer] [WhiskAction] write initiated on existing cache entry, invalidating CacheKey(whisk.system/invokerHealthTestAction0), tid sid_loadbalancer, state WriteInProgress
+[2019-05-14T20:38:54.392Z] [INFO] [#tid_sid_loadbalancer] [CouchDbRestStore] [PUT] 'whisk_local_whisks' saving document: 'id: whisk.system/invokerHealthTestAction0, rev: 7-f5b2c1a91f599ca29b3a7075e5433420' [marker:database_saveDocument_start:2575]
+[2019-05-14T20:38:54.519Z] [INFO] [#tid_sid_loadbalancer] [CouchDbRestStore]  [marker:database_saveDocument_finish:2703:127]
+[2019-05-14T20:38:54.523Z] [INFO] [#tid_sid_loadbalancer] [WhiskAction] write all done, caching CacheKey(whisk.system/invokerHealthTestAction0) Cached
+[2019-05-14T20:38:54.524Z] [INFO] [#tid_sid_loadbalancer] [InvokerPool] test action for invoker health now exists
+[2019-05-14T20:38:54.626Z] [INFO] [#tid_sid_dispatcher] [MessageFeed] handler capacity = 128, pipeline fill at = 128, pipeline depth = 256
+[2019-05-14T20:38:54.628Z] [INFO] [#tid_sid_controller] [Controller] loadbalancer initialized: ShardingContainerPoolBalancer
+[2019-05-14T20:38:54.747Z] [INFO] [#tid_sid_controller] [KindRestrictor] all kinds are allowed, the white-list is not specified
+[2019-05-14T20:38:55.133Z] [INFO] [#tid_sid_controller] [ActionsApi] actionSequenceLimit '50'
+[2019-05-14T20:39:23.563Z] [INFO] [#tid_sid_invokerHealth] [InvokerPool] registered a new invoker: invoker0
+[2019-05-14T20:39:23.627Z] [INFO] [#tid_sid_invokerHealth] [InvokerActor] invoker0 is unhealthy [marker:loadbalancer_invokerState.unhealthy_count:31808]
+[2019-05-14T20:39:23.707Z] [INFO] [#tid_sid_invokerHealth] [ShardingContainerPoolBalancer] posting topic 'invoker0' with activation id '9adcf9a164dd4a1f9cf9a164ddfa1f73' [marker:controller_kafka_start:31890]
+[2019-05-14T20:39:23.746Z] [INFO] [#tid_sid_invokerHealth] [InvokerPool] invoker status changed to 0 -> Unhealthy
+[2019-05-14T20:39:23.835Z] [INFO] [#tid_sid_loadbalancer] [ShardingContainerPoolBalancerState] loadbalancer invoker status updated. managedInvokers = 1 blackboxInvokers = 1
+[2019-05-14T20:39:23.940Z] [INFO] [#tid_sid_invokerHealth] [ShardingContainerPoolBalancer] posted to invoker0[0][139] [marker:controller_kafka_finish:32124:232]
+[2019-05-14T20:40:23.729Z] [INFO] [#tid_sid_invokerHealth] [ShardingContainerPoolBalancer] posting topic 'invoker0' with activation id 'e0e8a287a3c74a7ea8a287a3c77a7e1a' [marker:controller_kafka_start:91913]
+[2019-05-14T20:40:23.737Z] [INFO] [#tid_sid_invokerHealth] [ShardingContainerPoolBalancer] posted to invoker0[0][140] [marker:controller_kafka_finish:91920:7]
