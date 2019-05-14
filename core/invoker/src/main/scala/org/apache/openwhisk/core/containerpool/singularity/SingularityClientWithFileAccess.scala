@@ -89,7 +89,7 @@ class SingularityClientWithFileAccess(singularityHost: Option[String] = None,
    * @param containerId Id of the desired Singularity container
    * @return canonical location of the container's log file
    */
-  // Singularity remake - This function will not be called now
+  // TODO
   protected def containerLogFile(containerId: ContainerId) = {
     new File(containerDirectory(containerId), s"${containerId.asString}-json.log").getCanonicalFile()
   }
@@ -146,6 +146,7 @@ class SingularityClientWithFileAccess(singularityHost: Option[String] = None,
       .recover { case _ => false }
 
   private val readChunkSize = 8192 // bytes
+  //TODO
   override def rawContainerLogs(containerId: ContainerId,
                                 fromPos: Long,
                                 pollInterval: Option[FiniteDuration]): AkkaSource[ByteString, Any] =

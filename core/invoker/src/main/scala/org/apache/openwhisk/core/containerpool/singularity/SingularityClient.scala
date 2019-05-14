@@ -127,7 +127,6 @@ class SingularityClient(singularityHost: Option[String] = None,
 
   def run(image: String, args: Seq[String] = Seq.empty[String])(
     implicit transid: TransactionId): Future[ContainerId] = {
-    // Future {
       blocking {
         // Acquires a permit from this semaphore, blocking until one is available, or the thread is interrupted.
         // Throws InterruptedException if the current thread is interrupted
@@ -144,41 +143,6 @@ class SingularityClient(singularityHost: Option[String] = None,
         }
       
       Future.successful(ContainerId(id.toString))
-    //}.flatMap { _ =>
-    //   // If the semaphore was acquired successfully
-    //   val r = scala.util.Random
-    //   val id = "Random" ++ (r.nextInt(100000)).toString()
-      
-    //   runCmd(Seq("instance", "start", "--net", "-C", "--writable-tmpfs") ++ Seq(("/nodejs6action.sif"), id.toString), config.timeouts.run)
-    //     .andThen {
-    //       case _ => 
-    //         runSemaphore.release()
-    //         Future.successful(ContainerId(id.toString))
-    //     }
-        // .map(ContainerId.apply)
-        // .recoverWith {
-        //   case _ =>
-        //     Future.successful(
-        //       SingularityContainerId
-        //         .parse(pre.stdout)
-        //         .map(BrokenSingularityContainer(_, s"Broken container: ${pre.getMessage}"))
-        //         .getOrElse(pre))
-        //   case pre: ProcessUnsuccessfulException if pre.exitStatus == ExitStatus(125) =>
-        //     log.info(this, "fail1" ++ pre.stdout)
-        //     Future.failed(
-        //       SingularityContainerId
-        //         .parse(pre.stdout)
-        //         .map(BrokenSingularityContainer(_, s"Broken container: ${pre.getMessage}"))
-        //         .getOrElse(pre))
-        //   case t: ProcessUnsuccessfulException =>
-        //     log.info(this, "fail2" ++ t.stdout)
-        //     Future.failed(
-        //       SingularityContainerId
-        //         .parse(t.stdout)
-        //         .map(BrokenSingularityContainer(_, s"Broken container:"))
-        //         .getOrElse(t))
-        // }
-    // }
   }
 
   def inspectIPAddress(id: ContainerId)(implicit transid: TransactionId): Future[ContainerAddress] =

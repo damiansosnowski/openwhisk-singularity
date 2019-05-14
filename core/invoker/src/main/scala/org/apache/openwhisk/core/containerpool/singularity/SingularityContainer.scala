@@ -267,6 +267,7 @@ class SingularityContainer(protected val id: ContainerId,
    *
    * @return a vector of Strings with log lines in our own JSON format
    */
+  //TODO
   def logs(limit: ByteSize, waitForSentinel: Boolean)(implicit transid: TransactionId): Source[ByteString, Any] = {
     singularity
       .rawContainerLogs(id, logFileOffset.get(), if (waitForSentinel) Some(filePollInterval) else None)
