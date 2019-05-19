@@ -626,7 +626,7 @@ class ContainerProxy(
     val activationWithLogs: Future[Either[ActivationLogReadingError, WhiskActivation]] = activation
       .flatMap { activation =>
         // Skips log collection entirely, if the limit is set to 0
-        if (job.action.limits.logs.asMegaBytes == 0.MB) {
+        if (true) {//(job.action.limits.logs.asMegaBytes == 0.MB) {
           Future.successful(Right(activation))
         } else {
           val start = tid.started(this, LoggingMarkers.INVOKER_COLLECT_LOGS, logLevel = InfoLevel)

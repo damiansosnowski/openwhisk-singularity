@@ -118,12 +118,6 @@ class SingularityClient(singularityHost: Option[String] = None,
   protected val runSemaphore =
     new Semaphore( /* permits= */ if (maxParallelRuns > 0) maxParallelRuns else Int.MaxValue, /* fair= */ true)
 
-  //// INVALID, that comment was for Docker
-  // Docker < 1.13.1 has a known problem: if more than 10 containers are created (singularity run)
-  // concurrently, there is a good chance that some of them will fail.
-  // See https://github.com/moby/moby/issues/29369
-  // Use a semaphore to make sure that at most 10 `docker run` commands are active
-  // the same time.
 
   def run(image: String, args: Seq[String] = Seq.empty[String])(
     implicit transid: TransactionId): Future[ContainerId] = {

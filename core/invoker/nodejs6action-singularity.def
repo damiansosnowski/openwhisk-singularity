@@ -4,4 +4,4 @@ Includecmd: yes
 
 %startscript
     cd /nodejsAction
-    node --expose-gc app.js
+    node --expose-gc app.js 1>>stdout.txt 2>>stderr.txt
