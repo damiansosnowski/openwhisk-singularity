@@ -382,6 +382,10 @@ object LoggingMarkers {
     LogMarkerToken(invoker, "docker", start, Some(cmd), Map("cmd" -> cmd))(MeasurementUnit.time.milliseconds)
   def INVOKER_DOCKER_CMD_TIMEOUT(cmd: String) =
     LogMarkerToken(invoker, "docker", timeout, Some(cmd), Map("cmd" -> cmd))(MeasurementUnit.none)
+  def INVOKER_SINGULARITY_CMD(cmd: String) =
+    LogMarkerToken(invoker, "singularity", start, Some(cmd), Map("cmd" -> cmd))(MeasurementUnit.time.milliseconds)
+  def INVOKER_SINGULARITY_CMD_TIMEOUT(cmd: String) =
+    LogMarkerToken(invoker, "singularity", timeout, Some(cmd), Map("cmd" -> cmd))(MeasurementUnit.none)
   def INVOKER_RUNC_CMD(cmd: String) =
     LogMarkerToken(invoker, "runc", start, Some(cmd), Map("cmd" -> cmd))(MeasurementUnit.time.milliseconds)
   def INVOKER_KUBECTL_CMD(cmd: String) =

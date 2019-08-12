@@ -1,4 +1,5 @@
 *
 !init.sh
+!*.sif
 !build/distributions
 !build/tmp/docker-coverage

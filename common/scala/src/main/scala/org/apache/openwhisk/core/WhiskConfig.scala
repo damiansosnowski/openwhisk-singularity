@@ -210,6 +210,9 @@ object ConfigKeys {
 
   val db = "whisk.db"
 
+  val singularity = "whisk.singularity"
+  val singularityClient = s"$singularity.client"
+  
   val docker = "whisk.docker"
   val dockerClient = s"$docker.client"
   val dockerContainerFactory = s"$docker.container-factory"

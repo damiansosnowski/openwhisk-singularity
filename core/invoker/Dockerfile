@@ -10,15 +10,31 @@ ENV DOCKER_VERSION=1.12.0 \
 
 RUN apk add --update openssl
 
-# Uncomment to fetch latest version of docker instead: RUN wget -qO- https://get.docker.com | sh
-# Install docker client
-RUN curl -sSL -o docker-${DOCKER_VERSION}.tgz https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz && \
-echo "${DOCKER_DOWNLOAD_SHA256}  docker-${DOCKER_VERSION}.tgz" | sha256sum -c - && \
-tar --strip-components 1 -xvzf docker-${DOCKER_VERSION}.tgz -C /usr/bin docker/docker && \
-tar --strip-components 1 -xvzf docker-${DOCKER_VERSION}.tgz -C /usr/bin docker/docker-runc && \
-rm -f docker-${DOCKER_VERSION}.tgz && \
-chmod +x /usr/bin/docker && \
-chmod +x /usr/bin/docker-runc
+RUN export VERSION=1.11 OS=linux ARCH=amd64 && \
+    wget https://dl.google.com/go/go$VERSION.$OS-$ARCH.tar.gz && \
+    tar -C /usr/local -xzf go$VERSION.$OS-$ARCH.tar.gz && \
+    rm go$VERSION.$OS-$ARCH.tar.gz
+
+RUN apk add git && \
+    echo 'export GOPATH=${HOME}/go' >> ~/.bashrc && \
+    echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc
+
+RUN apk add gcc libc-dev squashfs-tools make python libarchive-dev tar linux-headers libseccomp-dev pkgconfig openssl-dev util-linux-dev 
+
+RUN source ~/.bashrc && \
+    go get -u github.com/golang/dep/cmd/dep && \
+    mkdir -p $GOPATH/src/github.com/sylabs && \
+    cd $GOPATH/src/github.com/sylabs && \
+    wget https://github.com/sylabs/singularity/releases/download/v3.1.1/singularity-3.1.1.tar.gz && \
+    tar xf singularity-3.1.1.tar.gz && \
+    cd singularity && \
+    ./mconfig && \
+    make -C ./builddir && \
+    make -C ./builddir install
+
+COPY nodejs6action.sif /
+
+RUN apk add iptables
 
 ADD build/distributions/invoker.tar ./
 
