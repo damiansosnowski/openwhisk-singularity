@@ -10,14 +10,10 @@ ansible ansible_connection=local
 controller0         ansible_host=192.168.0.199 ansible_connection=local
 ;
 [kafkas]
-kafka0              ansible_host= ansible_connection=local
-kafka0              ansible_host=192.168.0.199
+kafka0              ansible_host=192.168.0.199 ansible_connection=local
 
 [zookeepers:children]
 kafkas
-
-[invokers]
-invoker0            ansible_host=192.168.0.199 ansible_connection=local
 
 ; db group is only used if db.provider is CouchDB
 [db]
