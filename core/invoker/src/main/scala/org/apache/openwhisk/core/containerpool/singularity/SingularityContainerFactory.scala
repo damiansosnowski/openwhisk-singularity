@@ -39,14 +39,10 @@ import java.util.concurrent.TimeoutException
 import pureconfig._
 import org.apache.openwhisk.core.ConfigKeys
 
-case class SingularityContainerFactoryConfig()
-
 class SingularityContainerFactory(instance: InvokerInstanceId,
                              parameters: Map[String, Set[String]],
                              containerArgsConfig: ContainerArgsConfig =
-                               loadConfigOrThrow[ContainerArgsConfig](ConfigKeys.containerArgs),
-                             singularityContainerFactoryConfig: SingularityContainerFactoryConfig =
-                               loadConfigOrThrow[SingularityContainerFactoryConfig](ConfigKeys.singularityContainerFactory))(
+                               loadConfigOrThrow[ContainerArgsConfig](ConfigKeys.containerArgs))(
   implicit actorSystem: ActorSystem,
   ec: ExecutionContext,
   logging: Logging,

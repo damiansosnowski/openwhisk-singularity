@@ -58,7 +58,7 @@ class SingularityClientWithFileAccess(singularityHost: Option[String] = None,
    * @param containerId Id of the desired Singularity container
    * @return canonical location of the container's home directory
    */
-  // Singularity remake - This function will not be called now
+  // Singularity remake - unverified if it is used for anything meaningful now
   protected def containerDirectory(containerId: ContainerId) = {
     new File(containersDirectory, containerId.asString).getCanonicalFile()
   }
@@ -73,7 +73,7 @@ class SingularityClientWithFileAccess(singularityHost: Option[String] = None,
    * @param containerId Id of the desired Singularity container
    * @return canonical location of the container's configuration file
    */
-  // Singularity remake - This function will not be called now
+  // Singularity remake - unverified if it is used for anything meaningful now
   protected def containerConfigFile(containerId: ContainerId) = {
     new File(containerDirectory(containerId), "config.v2.json").getCanonicalFile()
   }
@@ -89,7 +89,7 @@ class SingularityClientWithFileAccess(singularityHost: Option[String] = None,
    * @param containerId Id of the desired Singularity container
    * @return canonical location of the container's log file
    */
-  // TODO
+  // Singularity remake - unverified if it is used for anything meaningful now
   protected def containerLogFile(containerId: ContainerId) = {
     new File(containerDirectory(containerId), s"${containerId.asString}-json.log").getCanonicalFile()
   }
@@ -101,7 +101,7 @@ class SingularityClientWithFileAccess(singularityHost: Option[String] = None,
    * @param configFile the container's configuration file in JSON format
    * @return contents of configuration file as JSON object
    */
-  // Singularity remake - This function will not be called now
+  // Singularity remake - unverified if it is used for anything meaningful now
   protected def configFileContents(configFile: File): Future[JsObject] = Future {
     blocking { // Needed due to synchronous file operations
       val source = Source.fromFile(configFile)
@@ -122,7 +122,7 @@ class SingularityClientWithFileAccess(singularityHost: Option[String] = None,
    * @param network name of the network to get the IP address from
    * @return the ip address of the container
    */
-  // Singularity remake - This function will not be called now
+  // Singularity remake - unverified if it is used for anything meaningful now
   protected def ipAddressFromFile(id: ContainerId, network: String): Future[ContainerAddress] = {
     configFileContents(containerConfigFile(id)).map { json =>
       val networks = json.fields("NetworkSettings").asJsObject.fields("Networks").asJsObject
@@ -135,18 +135,18 @@ class SingularityClientWithFileAccess(singularityHost: Option[String] = None,
   // See extended trait for description
   override def inspectIPAddress(id: ContainerId)(
     implicit transid: TransactionId): Future[ContainerAddress] = {
+      // This sleep is needed because we need time for a container to start. No other way was found at the moment
       Thread.sleep(1000)
       super.inspectIPAddress(id)
   }
 
-  // Singularity remake - This function will not be called now
+  // Singularity remake - unverified if it is used for anything meaningful now
   override def isOomKilled(id: ContainerId)(implicit transid: TransactionId): Future[Boolean] =
     configFileContents(containerConfigFile(id))
       .map(_.fields("State").asJsObject.fields("OOMKilled").convertTo[Boolean])
       .recover { case _ => false }
 
   private val readChunkSize = 8192 // bytes
-  //TODO
   override def rawContainerLogs(containerId: ContainerId,
                                 fromPos: Long,
                                 pollInterval: Option[FiniteDuration]): AkkaSource[ByteString, Any] =
