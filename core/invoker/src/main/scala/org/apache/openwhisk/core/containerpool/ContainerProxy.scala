@@ -20,16 +20,14 @@ package org.apache.openwhisk.core.containerpool
 import java.time.Instant
 import akka.actor.Status.{Failure => FailureMessage}
 import akka.actor.{FSM, Props, Stash}
-import akka.event.Logging.InfoLevel
 import akka.pattern.pipe
 import pureconfig.loadConfigOrThrow
 import scala.collection.immutable
 import spray.json.DefaultJsonProtocol._
 import spray.json._
-import org.apache.openwhisk.common.{AkkaLogging, Counter, LoggingMarkers, TransactionId}
+import org.apache.openwhisk.common.{AkkaLogging, Counter, TransactionId}
 import org.apache.openwhisk.core.ConfigKeys
 import org.apache.openwhisk.core.connector.ActivationMessage
-import org.apache.openwhisk.core.containerpool.logging.LogCollectingException
 import org.apache.openwhisk.core.database.UserContext
 import org.apache.openwhisk.core.entity.ExecManifest.ImageName
 import org.apache.openwhisk.core.entity._
@@ -625,24 +623,26 @@ class ContainerProxy(
     // Adds logs to the raw activation.
     val activationWithLogs: Future[Either[ActivationLogReadingError, WhiskActivation]] = activation
       .flatMap { activation =>
-        // Skips log collection entirely, if the limit is set to 0
-        if (true) {//(job.action.limits.logs.asMegaBytes == 0.MB) {
-          Future.successful(Right(activation))
-        } else {
-          val start = tid.started(this, LoggingMarkers.INVOKER_COLLECT_LOGS, logLevel = InfoLevel)
-          collectLogs(tid, job.msg.user, activation, container, job.action)
-            .andThen {
-              case Success(_) => tid.finished(this, start)
-              case Failure(t) => tid.failed(this, start, s"reading logs failed: $t")
-            }
-            .map(logs => Right(activation.withLogs(logs)))
-            .recover {
-              case LogCollectingException(logs) =>
-                Left(ActivationLogReadingError(activation.withLogs(logs)))
-              case _ =>
-                Left(ActivationLogReadingError(activation.withLogs(ActivationLogs(Vector(Messages.logFailure)))))
-            }
-        }
+        Future.successful(Right(activation))
+        // Skip log collection, Singularity cannot grab container logs as of now
+
+        // if (true) {//(job.action.limits.logs.asMegaBytes == 0.MB) {
+        //   Future.successful(Right(activation))
+        // } else {
+        //   val start = tid.started(this, LoggingMarkers.INVOKER_COLLECT_LOGS, logLevel = InfoLevel)
+        //   collectLogs(tid, job.msg.user, activation, container, job.action)
+        //     .andThen {
+        //       case Success(_) => tid.finished(this, start)
+        //       case Failure(t) => tid.failed(this, start, s"reading logs failed: $t")
+        //     }
+        //     .map(logs => Right(activation.withLogs(logs)))
+        //     .recover {
+        //       case LogCollectingException(logs) =>
+        //         Left(ActivationLogReadingError(activation.withLogs(logs)))
+        //       case _ =>
+        //         Left(ActivationLogReadingError(activation.withLogs(ActivationLogs(Vector(Messages.logFailure)))))
+        //     }
+        // }
       }
 
     activationWithLogs
