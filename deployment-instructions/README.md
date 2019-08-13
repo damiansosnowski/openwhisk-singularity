@@ -56,22 +56,22 @@ ansible-playbook -i environments/local routemgmt.yml
 In main folder: setting wsk properties
 ```
 cd <openwhisk-home>
-wsk property set --auth `cat ansible/files/auth.guest`
-wsk property set --apihost 172.17.0.1
+./bin/wsk property set --auth `cat ansible/files/auth.guest`
+./bin/wsk property set --apihost 172.17.0.1
 ```
 
 Finally, a hello world
 
 ```
-wsk action invoke /whisk.system/utils/echo -p message hello --insecure --result
+./bin/wsk action invoke /whisk.system/utils/echo -p message hello --insecure --result
 ```
 
 Hot-swapping a Single component
 
 ```
 cd <openwhisk-home>
-gradle :core:invoker:distDocker -PdockerImageTag=myNewInvoker
+./gradlew distDocker
 
 cd ansible
-ansible-playbook -i environments/local invoker.yml -e docker_image_tag=myNewInvoker
+ansible-playbook -i environments/local invoker.yml
 ```
