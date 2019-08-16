@@ -1,7 +1,10 @@
 Bootstrap: docker
-From: openwhisk/nodejs6action:latest
+Registry: http://localhost:5000/
+Namespace:
+From: custom-nodejs6action:latest
 Includecmd: yes
 
 %startscript
     cd /nodejsAction
-    node --expose-gc app.js 1>>stdout.txt 2>>stderr.txt
+    source init_port.sh
+    node --expose-gc app.js 1>>/tmp/stdout.txt 2>>/tmp/stderr.txt
