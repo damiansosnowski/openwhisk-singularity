@@ -10,7 +10,7 @@ ENV DOCKER_VERSION=1.12.0 \
 
 RUN apk add --update openssl
 
-RUN export VERSION=1.11 OS=linux ARCH=amd64 && \
+RUN export VERSION=1.12 OS=linux ARCH=amd64 && \
     wget https://dl.google.com/go/go$VERSION.$OS-$ARCH.tar.gz && \
     tar -C /usr/local -xzf go$VERSION.$OS-$ARCH.tar.gz && \
     rm go$VERSION.$OS-$ARCH.tar.gz
@@ -25,8 +25,8 @@ RUN source ~/.bashrc && \
     go get -u github.com/golang/dep/cmd/dep && \
     mkdir -p $GOPATH/src/github.com/sylabs && \
     cd $GOPATH/src/github.com/sylabs && \
-    wget https://github.com/sylabs/singularity/releases/download/v3.1.1/singularity-3.1.1.tar.gz && \
-    tar xf singularity-3.1.1.tar.gz && \
+    wget https://github.com/sylabs/singularity/releases/download/v3.3.0/singularity-3.3.0.tar.gz && \
+    tar xf singularity-3.3.0.tar.gz && \
     cd singularity && \
     ./mconfig && \
     make -C ./builddir && \
