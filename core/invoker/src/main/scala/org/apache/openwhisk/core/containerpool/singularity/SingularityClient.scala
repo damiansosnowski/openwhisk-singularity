@@ -22,6 +22,9 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.concurrent.Semaphore
 
+import java.io.File
+import java.io.PrintWriter
+
 import akka.actor.ActorSystem
 
 import scala.collection.concurrent.TrieMap
@@ -118,7 +121,7 @@ class SingularityClient(singularityHost: Option[String] = None,
   protected val runSemaphore =
     new Semaphore( /* permits= */ if (maxParallelRuns > 0) maxParallelRuns else Int.MaxValue, /* fair= */ true)
 
-  val port = 9000
+  var port = 9000
 
   def run(image: String, args: Seq[String] = Seq.empty[String])(
     implicit transid: TransactionId): Future[ContainerId] = {
@@ -131,15 +134,15 @@ class SingularityClient(singularityHost: Option[String] = None,
       val r = scala.util.Random
       val id = "Random" ++ (r.nextInt(100000)).toString()
 
-      portFolderPath = "/tmp/container-configs/" + id.toString
-      portConfigFilePath = "/tmp/container-configs/" + id.toString + "port.conf"
-      
-      runSystemCmd(Seq("mkdir", "-p", portFolderPath), config.timeouts.run)
-      runSystemCmd(Seq("echo", port.toString, ">", portConfigFilePath.toString), config.timeouts.run)
+      val portConfigFilePath = s"/tmp/" + id.toString + s"_port.conf"
+
+      val writer = new PrintWriter(new File(portConfigFilePath))
+      writer.write(port.toString)
+      writer.close()
 
       port = port + 1
 
-      bindString = portConfigFilePath.toString + s":/port.conf"
+      val bindString = portConfigFilePath.toString + s":/port.conf"
 
       runCmd(Seq("instance", "start", "-c", "--bind", bindString) ++ Seq(("/nodejs6action.simg"), id.toString), config.timeouts.run)
         .andThen {

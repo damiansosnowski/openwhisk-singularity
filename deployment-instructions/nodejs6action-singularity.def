@@ -6,5 +6,6 @@ Includecmd: yes
 
 %startscript
     cd /nodejsAction
-    source init_port.sh
-    node --expose-gc app.js 1>>/tmp/stdout.txt 2>>/tmp/stderr.txt
+    config_file="/port.conf"
+    read port < "$config_file"
+    APP_PORT="$port" node --expose-gc app.js 1>>/tmp/stdout.txt 2>>/tmp/stderr.txt
