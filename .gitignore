@@ -86,3 +86,7 @@ intellij-run-config.groovy
 
 # VSCode
 .vscode/
+
+# local invoker deployment
+local-invoker-deployment/config
+local-invoker-deployment/invoker
