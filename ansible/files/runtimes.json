@@ -19,13 +19,29 @@
                     "memory": "256 MB"
                 }]
             }
+        ],
+        "python": [
+            {
+                "kind": "python:3",
+                "default": true,
+                "image": {
+                    "prefix": "",
+                    "name": "python3action",
+                    "tag": ""
+                },
+                "deprecated": false,
+                "attached": {
+                    "attachmentName": "codefile",
+                    "attachmentType": "text/plain"
+                }
+            }
         ]
     },
     "blackboxes": [
         {
-            "prefix": "",
+            "prefix": "openwhisk",
             "name": "dockerskeleton",
-            "tag": ""
+            "tag": "latest"
         }
     ]
 }
