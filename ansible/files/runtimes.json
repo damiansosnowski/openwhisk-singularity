@@ -5,9 +5,9 @@
                 "kind": "nodejs:6",
                 "default": true,
                 "image": {
-                    "prefix": "openwhisk",
+                    "prefix": "",
                     "name": "nodejs6action",
-                    "tag": "latest"
+                    "tag": ""
                 },
                 "deprecated": false,
                 "attached": {
@@ -23,9 +23,9 @@
     },
     "blackboxes": [
         {
-            "prefix": "openwhisk",
+            "prefix": "",
             "name": "dockerskeleton",
-            "tag": "latest"
+            "tag": ""
         }
     ]
 }

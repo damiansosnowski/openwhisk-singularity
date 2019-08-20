@@ -1,1 +1,0 @@
-./init.sh --id 0 --uniqueName 0 >> ./logs/invoker0_logs.log 2>&1

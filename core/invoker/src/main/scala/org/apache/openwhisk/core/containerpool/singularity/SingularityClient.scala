@@ -75,6 +75,11 @@ case class SingularityClientTimeoutConfig(run: Duration,
 case class SingularityClientConfig(parallelRuns: Int, timeouts: SingularityClientTimeoutConfig)
 
 /**
+ * Image path for singularity client
+ */
+case class SingularityImagePathConfig(imagePath: String)
+
+/**
  * Serves as interface to the singularity CLI tool.
  *
  * Be cautious with the ExecutionContext passed to this, as the
@@ -88,6 +93,9 @@ class SingularityClient(singularityHost: Option[String] = None,
     extends SingularityApi
     with ProcessRunner {
   implicit private val ec = executionContext
+
+  val imagePathConfig: SingularityImagePathConfig =
+    loadConfigOrThrow[SingularityImagePathConfig]("whisk.singularity.client")
 
   // Determines how to run singularity. Failure to find a Singularity binary implies
   // a failure to initialize this instance of SingularityClient.
@@ -144,7 +152,7 @@ class SingularityClient(singularityHost: Option[String] = None,
 
       val bindString = portConfigFilePath.toString + s":/port.conf"
 
-      runCmd(Seq("instance", "start", "-c", "--bind", bindString) ++ Seq(("/nodejs6action.simg"), id.toString), config.timeouts.run)
+      runCmd(Seq("instance", "start", "-c", "--bind", bindString, (imagePathConfig.imagePath ++ image ++ ".simg"), id.toString), config.timeouts.run)
         .andThen {
           case _ => 
             runSemaphore.release()
