@@ -223,24 +223,6 @@ class SingularityClient(singularityHost: Option[String] = None,
         transid.failed(this, start, t.getMessage, ErrorLevel)
     }
   }
-
-  protected def runSystemCmd(args: Seq[String], timeout: Duration)(implicit transid: TransactionId): Future[String] = {
-    val cmd = args
-    val start = transid.started(
-      this,
-      LoggingMarkers.INVOKER_SINGULARITY_CMD(args.head),
-      s"running ${cmd.mkString(" ")} (timeout: $timeout)",
-      logLevel = InfoLevel)
-    executeProcess(cmd, timeout).andThen {
-      case Success(_) =>
-        transid.finished(this, start)
-      case Failure(pte: ProcessTimeoutException) =>
-        transid.failed(this, start, pte.getMessage, ErrorLevel)
-        MetricEmitter.emitCounterMetric(LoggingMarkers.INVOKER_SINGULARITY_CMD_TIMEOUT(args.head))
-      case Failure(t) =>
-        transid.failed(this, start, t.getMessage, ErrorLevel)
-    }
-  }
 }
 
 trait SingularityApi {
