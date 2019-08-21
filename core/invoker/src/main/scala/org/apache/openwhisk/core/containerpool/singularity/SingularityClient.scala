@@ -100,7 +100,7 @@ class SingularityClient(singularityHost: Option[String] = None,
   // Determines how to run singularity. Failure to find a Singularity binary implies
   // a failure to initialize this instance of SingularityClient.
   protected val singularityCmd: Seq[String] = {
-    val alternatives = List("/usr/local/bin/singularity")
+    val alternatives = List("/opt/singularity/bin/singularity","/usr/local/bin/singularity")
 
     val singularityBin = Try {
       alternatives.find(a => Files.isExecutable(Paths.get(a))).get
