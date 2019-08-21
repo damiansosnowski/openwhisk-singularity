@@ -5,9 +5,9 @@
                 "kind": "nodejs:6",
                 "default": true,
                 "image": {
-                    "prefix": "openwhisk",
+                    "prefix": "",
                     "name": "nodejs6action",
-                    "tag": "latest"
+                    "tag": ""
                 },
                 "deprecated": false,
                 "attached": {
@@ -18,6 +18,22 @@
                     "count": 2,
                     "memory": "256 MB"
                 }]
+            }
+        ],
+        "python": [
+            {
+                "kind": "python:3",
+                "default": true,
+                "image": {
+                    "prefix": "",
+                    "name": "python3action",
+                    "tag": ""
+                },
+                "deprecated": false,
+                "attached": {
+                    "attachmentName": "codefile",
+                    "attachmentType": "text/plain"
+                }
             }
         ]
     },

@@ -197,6 +197,8 @@ invoker:
     keystore:
       password: "{{ invoker_keystore_password | default('openwhisk') }}"
       name: "{{ __invoker_ssl_keyPrefix }}openwhisk-keystore.p12"
+  singularity:
+    imagePath: "/images/"
 
 userLogs:
   spi: "{{ userLogs_spi | default('org.apache.openwhisk.core.containerpool.logging.DockerToActivationLogStoreProvider') }}"

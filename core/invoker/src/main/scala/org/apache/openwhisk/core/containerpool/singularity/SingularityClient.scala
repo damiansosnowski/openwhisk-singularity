@@ -75,6 +75,11 @@ case class SingularityClientTimeoutConfig(run: Duration,
 case class SingularityClientConfig(parallelRuns: Int, timeouts: SingularityClientTimeoutConfig)
 
 /**
+ * Image path for singularity client
+ */
+case class SingularityImagePathConfig(imagePath: String)
+
+/**
  * Serves as interface to the singularity CLI tool.
  *
  * Be cautious with the ExecutionContext passed to this, as the
@@ -88,6 +93,9 @@ class SingularityClient(singularityHost: Option[String] = None,
     extends SingularityApi
     with ProcessRunner {
   implicit private val ec = executionContext
+
+  val imagePathConfig: SingularityImagePathConfig =
+    loadConfigOrThrow[SingularityImagePathConfig]("whisk.singularity.client")
 
   // Determines how to run singularity. Failure to find a Singularity binary implies
   // a failure to initialize this instance of SingularityClient.
@@ -121,7 +129,8 @@ class SingularityClient(singularityHost: Option[String] = None,
   protected val runSemaphore =
     new Semaphore( /* permits= */ if (maxParallelRuns > 0) maxParallelRuns else Int.MaxValue, /* fair= */ true)
 
-  var port = 9000
+  var containerIdNumber = 1000
+  var containerIdToPortMap = Map[String,Int]()
 
   def run(image: String, args: Seq[String] = Seq.empty[String])(
     implicit transid: TransactionId): Future[ContainerId] = {
@@ -131,8 +140,15 @@ class SingularityClient(singularityHost: Option[String] = None,
         runSemaphore.acquire()
       }
 
-      val r = scala.util.Random
-      val id = "Random" ++ (r.nextInt(100000)).toString()
+      val id = "container" ++ containerIdNumber.toString()
+      containerIdNumber = containerIdNumber + 1
+
+      var port = 9000
+      while(containerIdToPortMap.values.exists(_ == port) && port < 9500){
+        port = port + 1
+      }
+
+      containerIdToPortMap += id -> port
 
       val portConfigFilePath = s"/tmp/" + id.toString + s"_port.conf"
 
@@ -140,11 +156,9 @@ class SingularityClient(singularityHost: Option[String] = None,
       writer.write(port.toString)
       writer.close()
 
-      port = port + 1
-
       val bindString = portConfigFilePath.toString + s":/port.conf"
 
-      runCmd(Seq("instance", "start", "-c", "--bind", bindString) ++ Seq(("/nodejs6action.simg"), id.toString), config.timeouts.run)
+      runCmd(Seq("instance", "start", "-c", "--bind", bindString, (imagePathConfig.imagePath ++ image ++ ".simg"), id.toString), config.timeouts.run)
         .andThen {
           case _ => 
             runSemaphore.release()
@@ -154,14 +168,7 @@ class SingularityClient(singularityHost: Option[String] = None,
   }
 
   def inspectIPAddress(id: ContainerId)(implicit transid: TransactionId): Future[ContainerAddress] =
-    runCmd(Seq("exec", ("instance://" ++ id.asString), "cat", "/port.conf"), config.timeouts.run)
-      .flatMap {
-        case "<no value>" => 
-          Future.failed(new NoSuchElementException)
-        case stdout       => 
-          log.info(this, s"Port read by inspectIPAddress $stdout")
-          Future.successful(ContainerAddress("localhost", stdout.toInt))
-    }
+    Future.successful(ContainerAddress("localhost", containerIdToPortMap(id.asString))) 
 
   def pause(id: ContainerId)(implicit transid: TransactionId): Future[Unit] =
     Future.successful(())
@@ -171,8 +178,10 @@ class SingularityClient(singularityHost: Option[String] = None,
     Future.successful(())
   //  runCmd(Seq("unpause", id.asString), config.timeouts.unpause).map(_ => ())
 
-  def rm(id: ContainerId)(implicit transid: TransactionId): Future[Unit] =
+  def rm(id: ContainerId)(implicit transid: TransactionId): Future[Unit] = {
+    containerIdToPortMap -= id.asString
     runCmd(Seq("instance", "stop", id.asString), config.timeouts.rm).map(_ => ())
+  }
 
   def ps(filters: Seq[(String, String)] = Seq.empty, all: Boolean = false)(
     implicit transid: TransactionId): Future[Seq[ContainerId]] = {
@@ -200,24 +209,6 @@ class SingularityClient(singularityHost: Option[String] = None,
 
   protected def runCmd(args: Seq[String], timeout: Duration)(implicit transid: TransactionId): Future[String] = {
     val cmd = singularityCmd ++ args
-    val start = transid.started(
-      this,
-      LoggingMarkers.INVOKER_SINGULARITY_CMD(args.head),
-      s"running ${cmd.mkString(" ")} (timeout: $timeout)",
-      logLevel = InfoLevel)
-    executeProcess(cmd, timeout).andThen {
-      case Success(_) =>
-        transid.finished(this, start)
-      case Failure(pte: ProcessTimeoutException) =>
-        transid.failed(this, start, pte.getMessage, ErrorLevel)
-        MetricEmitter.emitCounterMetric(LoggingMarkers.INVOKER_SINGULARITY_CMD_TIMEOUT(args.head))
-      case Failure(t) =>
-        transid.failed(this, start, t.getMessage, ErrorLevel)
-    }
-  }
-
-  protected def runSystemCmd(args: Seq[String], timeout: Duration)(implicit transid: TransactionId): Future[String] = {
-    val cmd = args
     val start = transid.started(
       this,
       LoggingMarkers.INVOKER_SINGULARITY_CMD(args.head),

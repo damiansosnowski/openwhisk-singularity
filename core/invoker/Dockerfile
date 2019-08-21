@@ -17,7 +17,7 @@ RUN wget https://github.com/sylabs/singularity/releases/download/2.5.1/singulari
     make && \
     make install
 
-COPY nodejs6action.simg /
+ADD images/ /images
 
 RUN apk add iptables
 
