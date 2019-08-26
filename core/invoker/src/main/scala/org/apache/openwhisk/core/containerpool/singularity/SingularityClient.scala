@@ -144,7 +144,7 @@ class SingularityClient(singularityHost: Option[String] = None,
       containerIdNumber = containerIdNumber + 1
 
       var port = 9000
-      while(containerIdToPortMap.values.exists(_ == port) && port < 9500){
+      while(containerIdToPortMap.values.exists(_ == port) && port < 9500) {
         port = port + 1
       }
 
@@ -158,12 +158,22 @@ class SingularityClient(singularityHost: Option[String] = None,
 
       val bindString = portConfigFilePath.toString + s":/port.conf"
 
-      runCmd(Seq("instance", "start", "-c", "--bind", bindString, (imagePathConfig.imagePath ++ image ++ ".simg"), id.toString), config.timeouts.run)
+      var imagePath = (imagePathConfig.imagePath ++ image ++ ".simg")
+      if (image == "python3aiaction") {
+        runCmd(Seq("instance", "start", "--nv", "--bind", bindString, imagePath, id.toString), config.timeouts.run)
+        .andThen {
+          case _ =>
+            runSemaphore.release()
+        }
+      }
+      else {
+        runCmd(Seq("instance", "start", "-c", "--bind", bindString, imagePath, id.toString), config.timeouts.run)
         .andThen {
           case _ => 
             runSemaphore.release()
         }
-      
+      }
+
       Future.successful(ContainerId(id.toString))
   }
 
