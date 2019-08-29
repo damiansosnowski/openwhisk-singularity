@@ -1,6 +1,4 @@
 *
 !init.sh
-!*.simg
-!images
 !build/distributions
 !build/tmp/docker-coverage

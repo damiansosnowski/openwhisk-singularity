@@ -17,8 +17,6 @@ RUN wget https://github.com/sylabs/singularity/releases/download/2.5.1/singulari
     make && \
     make install
 
-ADD images/ /images
-
 RUN apk add iptables
 
 ADD build/distributions/invoker.tar ./
