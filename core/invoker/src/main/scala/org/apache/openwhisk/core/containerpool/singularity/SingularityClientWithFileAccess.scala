@@ -135,8 +135,6 @@ class SingularityClientWithFileAccess(singularityHost: Option[String] = None,
   // See extended trait for description
   override def inspectIPAddress(id: ContainerId)(
     implicit transid: TransactionId): Future[ContainerAddress] = {
-      // This sleep is needed because we need time for a container to start. No other way was found at the moment
-      Thread.sleep(1000)
       super.inspectIPAddress(id)
   }
 
