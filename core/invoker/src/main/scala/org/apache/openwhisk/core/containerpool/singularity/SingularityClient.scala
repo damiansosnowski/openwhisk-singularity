@@ -129,8 +129,9 @@ class SingularityClient(singularityHost: Option[String] = None,
   protected val runSemaphore =
     new Semaphore( /* permits= */ if (maxParallelRuns > 0) maxParallelRuns else Int.MaxValue, /* fair= */ true)
 
-  var containerIdNumber = 1000
   var containerIdToPortMap = Map[String,Int]()
+  var port = 9000
+  val r = new scala.util.Random
 
   def run(image: String, args: Seq[String] = Seq.empty[String])(
     implicit transid: TransactionId): Future[ContainerId] = {
@@ -140,12 +141,12 @@ class SingularityClient(singularityHost: Option[String] = None,
         runSemaphore.acquire()
       }
 
-      val id = "container" ++ containerIdNumber.toString()
-      containerIdNumber = containerIdNumber + 1
+      val randomId = r.nextInt(1000000000)
+      val id = "c" ++ randomId.toString
 
-      var port = 9000
       while(containerIdToPortMap.values.exists(_ == port) && port < 9500) {
         port = port + 1
+        if (port == 9500) port = 9000
       }
 
       containerIdToPortMap += id -> port
@@ -190,7 +191,7 @@ class SingularityClient(singularityHost: Option[String] = None,
 
   def rm(id: ContainerId)(implicit transid: TransactionId): Future[Unit] = {
     containerIdToPortMap -= id.asString
-    runCmd(Seq("instance", "stop", id.asString), config.timeouts.rm).map(_ => ())
+    runCmd(Seq("instance", "stop", "--force", id.asString), config.timeouts.rm).map(_ => ())
   }
 
   def ps(filters: Seq[(String, String)] = Seq.empty, all: Boolean = false)(
