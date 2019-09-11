@@ -80,7 +80,7 @@ ansible/roles/invoker/files/*
 !tests/dat/actions/python_virtualenv_dir.zip
 !tests/dat/actions/python_virtualenv_name.zip
 !tests/dat/actions/zippedaction.zip
-!performance-tests/test-results.zip
+!performance-tests/results.zip
 
 # dev
 intellij-run-config.groovy
