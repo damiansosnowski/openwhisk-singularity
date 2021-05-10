@@ -2,11 +2,11 @@
     "runtimes": {
         "nodejs": [
             {
-                "kind": "nodejs:6",
+                "kind": "nodejs:8",
                 "default": true,
                 "image": {
                     "prefix": "",
-                    "name": "nodejs6action",
+                    "name": "nodejs8action",
                     "tag": ""
                 },
                 "deprecated": false,
@@ -19,23 +19,8 @@
                     "memory": "256 MB"
                 }]
             }
-        ],
-        "python": [
-            {
-                "kind": "python:3",
-                "default": true,
-                "image": {
-                    "prefix": "",
-                    "name": "python3action",
-                    "tag": ""
-                },
-                "deprecated": false,
-                "attached": {
-                    "attachmentName": "codefile",
-                    "attachmentType": "text/plain"
-                }
-            }
         ]
+
     },
     "blackboxes": [
         {

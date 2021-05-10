@@ -8,11 +8,13 @@ ENV UID=1001 \
 ENV DOCKER_VERSION=1.12.0 \
     DOCKER_DOWNLOAD_SHA256=3dd07f65ea4a7b4c8829f311ab0213bca9ac551b5b24706f3e79a97e22097f8b
 
-RUN apk add gcc libc-dev squashfs-tools make python libarchive-dev tar linux-headers
+RUN apk add gcc libc-dev squashfs-tools make python libarchive-dev tar linux-headers \
+    autoconf libtool automake
 
-RUN wget https://github.com/sylabs/singularity/releases/download/2.5.1/singularity-2.5.1.tar.gz && \
-    tar xvf singularity-2.5.1.tar.gz && \
+RUN wget https://github.com/sylabs/singularity/archive/refs/tags/2.5.1.tar.gz && \
+    tar xvf 2.5.1.tar.gz && \
     cd singularity-2.5.1 && \
+    ./autogen.sh && \
     ./configure --prefix=/usr/local --sysconfdir=/etc && \
     make && \
     make install

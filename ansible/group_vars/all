@@ -328,7 +328,7 @@ catalog_repos:
     url: https://github.com/apache/incubator-openwhisk-catalog.git
     # Set the local location as the same level as openwhisk home, but it can be changed.
     location: "{{ openwhisk_home }}/../openwhisk-catalog"
-    version: "HEAD"
+    version: "cb8d5c73ee6cee48a79051920ca1ef27b4415030"
     repo_update: "no"
 
 # The openwhisk_cli is used to determine how to install the OpenWhisk CLI. The
